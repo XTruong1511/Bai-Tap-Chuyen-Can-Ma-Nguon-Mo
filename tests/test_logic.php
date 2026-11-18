@@ -26,20 +26,13 @@ echo "Total Schedules: " . $stats['total_schedules'] . "\n";
 
 echo "\n--- Testing Smart Recommendation Algorithm ---\n";
 $recom = $scheduleModel->getSmartRecommendations('Lập trình mã nguồn mở PHP', 'Thứ 2', 'Sáng (Tiết 1-3)', 1);
-echo "Recommendations count: " . count($recom) . "\n";
-echo "Top 3 Recommended Teachers for 'Lập trình mã nguồn mở PHP':\n";
-for ($i = 0; $i < min(3, count($recom)); $i++) {
-    $r = $recom[$i];
-    echo sprintf(
-        " %d. %s | Chuyên môn: %s | Điểm khớp: %d | Trạng thái: %s | Di chuyển: %s\n",
-        $i + 1,
-        $r['full_name'],
-        $r['expertise'],
-        $r['match_score'],
-        $r['is_busy'] ? 'BẬN (TRÙNG GIỜ)' : 'RẢNH',
-        $r['travel_status']
-    );
-}
+echo "Top Recommended for 'Lập trình mã nguồn mở PHP': " . $recom[0]['full_name'] . " (" . $recom[0]['faculty'] . ")\n";
+
+$recomFood = $scheduleModel->getSmartRecommendations('Hóa sinh thực phẩm', 'Thứ 3', 'Sáng (Tiết 1-3)', 1);
+echo "Top Recommended for 'Hóa sinh thực phẩm': " . $recomFood[0]['full_name'] . " (" . $recomFood[0]['faculty'] . " - " . $recomFood[0]['department'] . ")\n";
+
+$recomBiz = $scheduleModel->getSmartRecommendations('Marketing căn bản', 'Thứ 4', 'Chiều (Tiết 7-9)', 1);
+echo "Top Recommended for 'Marketing căn bản': " . $recomBiz[0]['full_name'] . " (" . $recomBiz[0]['faculty'] . " - " . $recomBiz[0]['department'] . ")\n";
 
 echo "\n--- Testing Conflict Checking ---\n";
 // Let's get the first existing schedule and test conflict detection

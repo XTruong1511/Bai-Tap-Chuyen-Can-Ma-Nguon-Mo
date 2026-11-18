@@ -338,7 +338,21 @@ class Schedule
                 'kiến trúc máy tính' => ['kiến trúc', 'hệ điều hành', 'linux', 'phần cứng', 'vi xử lý'],
                 'đám mây' => ['đám mây', 'cloud', 'aws', 'azure', 'devops'],
                 'đồ họa' => ['đồ họa', 'ui', 'ux', 'thiết kế', 'photoshop', 'figma'],
-                'thực phẩm' => ['thực phẩm', 'hóa sinh', 'chế biến', 'vi sinh']
+                'thực phẩm' => ['thực phẩm', 'hóa sinh', 'chế biến', 'vi sinh', 'haccp', 'dinh dưỡng', 'đồ uống', 'sau thu hoạch', 'độc chất'],
+                'quản trị kinh doanh' => ['quản trị', 'kinh doanh', 'marketing', 'tiêu dùng', 'nhân sự', 'doanh nghiệp', 'chiến lược', 'khởi nghiệp'],
+                'tài chính kế toán' => ['kế toán', 'tài chính', 'kiểm toán', 'ngân hàng', 'thuế', 'báo cáo tài chính', 'tiền tệ'],
+                'du lịch ẩm thực' => ['du lịch', 'lữ hành', 'khách sạn', 'nhà hàng', 'ẩm thực', 'chế biến món', 'lễ tân', 'bếp'],
+                'ngoại ngữ' => ['tiếng anh', 'tiếng trung', 'ngôn ngữ', 'dịch thuật', 'toefl', 'ielts', 'giao tiếp'],
+                'luật' => ['luật', 'pháp lý', 'pháp luật', 'dân sự', 'thương mại quốc tế', 'tố tụng'],
+                'điện điện tử' => ['điện', 'điện tử', 'vi điều khiển', 'plc', 'tự động hóa', 'mạch điện', 'viễn thông', 'cảm biến'],
+                'cơ khí' => ['cơ khí', 'chế tạo máy', 'cnc', 'cơ điện tử', 'nhiệt lạnh', 'chi tiết máy', 'thủy lực'],
+                'hóa học' => ['hóa học', 'hóa hữu cơ', 'hóa vô cơ', 'hóa phân tích', 'vật liệu', 'kỹ thuật hóa'],
+                'thương mại logistics' => ['thương mại điện tử', 'logistics', 'chuỗi cung ứng', 'xuất nhập khẩu', 'vận tải', 'kho vận'],
+                'may thời trang' => ['may', 'thời trang', 'thiết kế thời trang', 'dệt may', 'rập'],
+                'sinh học môi trường' => ['sinh học', 'môi trường', 'xử lý nước', 'chất thải', 'công nghệ sinh học'],
+                'chính trị' => ['triết học', 'tư tưởng', 'chính trị', 'lịch sử đảng', 'mác - lênin'],
+                'khoa học cơ bản' => ['toán', 'vật lý', 'giải tích', 'đại số', 'xác suất'],
+                'thể chất quốc phòng' => ['thể chất', 'quốc phòng', 'bóng đá', 'bóng chuyền', 'an ninh', 'quân sự']
             ];
 
             foreach ($domainKeywords as $category => $kwGroup) {
@@ -356,6 +370,18 @@ class Schedule
                             $score += 25;
                             $matchedKeywords[] = $kw;
                         }
+                    }
+                }
+            }
+
+            // Khớp trực tiếp với Khoa và Bộ môn của giảng viên
+            $normalizedFaculty = mb_strtolower($t['faculty'] ?? '', 'UTF-8');
+            $normalizedDept = mb_strtolower($t['department'] ?? '', 'UTF-8');
+            foreach ($subjectKeywords as $kw) {
+                if (mb_strlen($kw, 'UTF-8') >= 3) {
+                    if (str_contains($normalizedFaculty, $kw) || str_contains($normalizedDept, $kw)) {
+                        $score += 30; // Điểm cộng cao khi môn học thuộc đúng Khoa hoặc Bộ môn
+                        $matchedKeywords[] = $kw;
                     }
                 }
             }
