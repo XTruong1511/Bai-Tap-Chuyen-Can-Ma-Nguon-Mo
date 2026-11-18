@@ -1,89 +1,91 @@
 <?php
-$pageTitle = 'Ma trận TKB';
+$pageTitle = 'Ma trận Thời khóa biểu';
+$isFluid = true; // Use fluid container to give maximum horizontal space
 require_once __DIR__ . '/../layouts/header.php';
 use App\Models\Schedule;
 ?>
 
-<!-- Header -->
-<div class="d-flex justify-content-between align-items-center mb-3">
+<!-- Header & Quick Actions -->
+<div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 mb-3">
     <div>
-        <h5 class="fw-bold text-dark mb-0">Ma trận Thời khóa biểu & Tiết trống</h5>
+        <h5 class="fw-bold text-dark mb-0">
+            <i class="fa-solid fa-table-cells text-primary me-2"></i>Ma trận Thời khóa biểu & Tiết trống
+        </h5>
     </div>
-    <div class="d-flex gap-2">
-        <button onclick="window.print()" class="btn-modern-outline no-print">
+    <div class="d-flex align-items-center gap-2">
+        <button onclick="window.print()" class="btn-modern-outline">
             <i class="fa-solid fa-print"></i> In TKB
         </button>
-        <a href="index.php?controller=schedule&action=create" class="btn-modern-primary no-print">
+        <a href="index.php?controller=schedule&action=create" class="btn-modern-primary">
             <i class="fa-solid fa-plus"></i> Thêm lịch mới
         </a>
     </div>
 </div>
 
-<!-- Filters -->
-<div class="card card-custom mb-3 no-print">
-    <div class="card-body p-2">
-        <form method="GET" action="index.php" class="d-flex flex-wrap gap-2 align-items-center text-nowrap">
-            <input type="hidden" name="controller" value="schedule">
-            <input type="hidden" name="action" value="matrix">
+<!-- Campus Tabs & Filters Bar -->
+<div class="card card-custom mb-3 no-print p-2">
+    <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-2">
+        <!-- Campus Filter Tabs (1-Click switch to spread out classes) -->
+        <div class="d-flex flex-wrap nav-tabs-branch">
+            <a href="index.php?controller=schedule&action=matrix<?= $teacherId ? '&teacher_id='.$teacherId : '' ?>" 
+               class="nav-link-tab <?= empty($branchId) ? 'active' : '' ?>">
+                <i class="fa-solid fa-layer-group me-1"></i> Tất cả cơ sở
+            </a>
+            <?php foreach ($branches as $b): ?>
+                <a href="index.php?controller=schedule&action=matrix&branch_id=<?= $b['id'] ?><?= $teacherId ? '&teacher_id='.$teacherId : '' ?>" 
+                   class="nav-link-tab <?= ($branchId === (int)$b['id']) ? 'active' : '' ?>">
+                    <span class="badge-branch-<?= ($b['id'] % 4) + 1 ?> me-1" style="font-size: 0.65rem;">CS<?= $b['id'] ?></span>
+                    <?= htmlspecialchars($b['branch_name']) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
 
-            <div class="d-flex align-items-center gap-1">
-                <span class="small text-muted fw-medium">Cơ sở:</span>
-                <select name="branch_id" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
-                    <option value="">Tất cả cơ sở</option>
-                    <?php foreach ($branches as $b): ?>
-                        <option value="<?= $b['id'] ?>" <?= ($branchId === (int)$b['id']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($b['branch_name']) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <div class="d-flex align-items-center gap-1">
-                <span class="small text-muted fw-medium">Giảng viên:</span>
-                <select name="teacher_id" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
-                    <option value="">Tất cả giảng viên</option>
+        <!-- Teacher Filter Dropdown -->
+        <div class="d-flex align-items-center gap-2 text-nowrap">
+            <form method="GET" action="index.php" class="d-flex align-items-center gap-1">
+                <input type="hidden" name="controller" value="schedule">
+                <input type="hidden" name="action" value="matrix">
+                <?php if ($branchId): ?><input type="hidden" name="branch_id" value="<?= $branchId ?>"><?php endif; ?>
+                
+                <span class="small text-muted fw-medium">Lọc GV:</span>
+                <select name="teacher_id" class="form-select form-select-sm" style="width: auto; min-width: 170px;" onchange="this.form.submit()">
+                    <option value="">-- Tất cả giảng viên --</option>
                     <?php foreach ($teachers as $t): ?>
                         <option value="<?= $t['id'] ?>" <?= ($teacherId === (int)$t['id']) ? 'selected' : '' ?>>
                             <?= htmlspecialchars($t['full_name']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
-            </div>
+            </form>
 
-            <?php if ($branchId || $teacherId): ?>
-                <a href="index.php?controller=schedule&action=matrix" class="btn btn-sm btn-outline-danger py-0 px-2">
+            <?php if ($teacherId): ?>
+                <a href="index.php?controller=schedule&action=matrix<?= $branchId ? '&branch_id='.$branchId : '' ?>" class="btn btn-sm btn-outline-danger py-1 px-2" title="Bỏ lọc GV">
                     <i class="fa-solid fa-xmark"></i>
                 </a>
             <?php endif; ?>
-
-            <div class="ms-auto small d-none d-lg-flex gap-1">
-                <span class="badge-branch-1">CS Chính</span>
-                <span class="badge-branch-2">Tân Kỳ Tân Quý</span>
-                <span class="badge-branch-3">Nguyễn Đỗ Cung</span>
-                <span class="badge-branch-4">Chế Lan Viên</span>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<!-- Matrix Table Grid -->
+<!-- Spacious Matrix Table Grid -->
 <div class="card card-custom">
     <div class="table-responsive">
-        <table class="table table-matrix-modern mb-0 text-nowrap">
+        <table class="table table-matrix-spacious text-nowrap">
             <thead>
                 <tr>
-                    <th style="width: 125px;">Ca / Tiết</th>
+                    <th style="width: 130px;" class="py-3">Ca / Tiết học</th>
                     <?php foreach (Schedule::DAYS as $d): ?>
-                        <th style="width: 14%;"><?= $d ?></th>
+                        <th style="width: 14%;" class="py-3"><?= $d ?></th>
                     <?php endforeach; ?>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach (Schedule::SHIFTS as $shift): ?>
                     <tr>
-                        <td class="bg-light fw-semibold text-dark small text-start ps-2 align-middle">
-                            <div class="text-primary" style="font-size: 0.78rem;"><?= $shift ?></div>
-                            <div class="text-muted fw-normal" style="font-size: 0.68rem;">
+                        <!-- Shift column -->
+                        <td class="bg-light fw-semibold text-dark small text-start ps-3 align-middle" style="background-color: #f8fafc !important;">
+                            <div class="text-primary fw-bold" style="font-size: 0.8rem;"><?= $shift ?></div>
+                            <div class="text-muted fw-normal mt-1" style="font-size: 0.72rem;">
                                 <?php
                                     if (strpos($shift, 'Tiết 1-3') !== false) echo '07:00 - 09:15';
                                     elseif (strpos($shift, 'Tiết 4-6') !== false) echo '09:30 - 11:45';
@@ -94,32 +96,44 @@ use App\Models\Schedule;
                             </div>
                         </td>
 
+                        <!-- Days columns -->
                         <?php foreach (Schedule::DAYS as $day): ?>
                             <?php $items = $matrix[$shift][$day] ?? []; ?>
-                            <td class="matrix-cell align-middle bg-white text-center">
+                            <td class="matrix-cell-spacious align-top bg-white">
                                 <?php if (!empty($items)): ?>
-                                    <?php foreach ($items as $item): ?>
-                                        <div class="schedule-card-modern badge-branch-<?= ($item['branch_id'] % 4) + 1 ?>" 
-                                             title="<?= htmlspecialchars($item['subject_name']) ?> - <?= htmlspecialchars($item['teacher_name']) ?> (<?= htmlspecialchars($item['room']) ?>)">
-                                            <div class="fw-semibold text-truncate" style="font-size: 0.74rem;">
-                                                <?= htmlspecialchars($item['subject_name']) ?>
+                                    <div class="d-flex flex-column gap-1">
+                                        <?php foreach ($items as $item): ?>
+                                            <div class="schedule-card-spacious card-branch-<?= ($item['branch_id'] % 4) + 1 ?>">
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    <div class="fw-bold text-dark text-truncate pe-1" style="font-size: 0.8rem;" title="<?= htmlspecialchars($item['subject_name']) ?>">
+                                                        <?= htmlspecialchars($item['subject_name']) ?>
+                                                    </div>
+                                                    <span class="badge bg-light text-dark border px-1" style="font-size: 0.7rem; font-weight: 600;">
+                                                        <?= htmlspecialchars($item['room']) ?>
+                                                    </span>
+                                                </div>
+
+                                                <div class="d-flex justify-content-between align-items-center text-muted" style="font-size: 0.73rem;">
+                                                    <span class="text-truncate" style="max-width: 120px;" title="<?= htmlspecialchars($item['teacher_name']) ?>">
+                                                        <i class="fa-regular fa-user me-1 text-primary"></i><?= htmlspecialchars($item['teacher_name']) ?>
+                                                    </span>
+                                                    
+                                                    <?php if (empty($branchId)): ?>
+                                                        <span class="badge-branch-<?= ($item['branch_id'] % 4) + 1 ?>" style="font-size: 0.65rem; padding: 2px 5px;">
+                                                            <?= htmlspecialchars($item['branch_name']) ?>
+                                                        </span>
+                                                    <?php endif; ?>
+                                                </div>
                                             </div>
-                                            <div class="d-flex justify-content-between text-truncate mt-1" style="font-size: 0.68rem;">
-                                                <span class="text-truncate" style="max-width: 85px;">
-                                                    <?= htmlspecialchars($item['teacher_name']) ?>
-                                                </span>
-                                                <span class="badge bg-white text-dark border py-0 px-1">
-                                                    <?= htmlspecialchars($item['room']) ?>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    </div>
                                 <?php else: ?>
+                                    <!-- Spacious Empty Slot Button -->
                                     <a href="index.php?controller=schedule&action=create&day=<?= urlencode($day) ?>&shift=<?= urlencode($shift) ?><?= $branchId ? '&branch_id=' . $branchId : '' ?><?= $teacherId ? '&teacher_id=' . $teacherId : '' ?>" 
-                                       class="empty-slot-btn no-print" title="Bấm để phân lịch vào ca này">
-                                        <i class="fa-solid fa-plus me-1"></i>Trống
+                                       class="empty-slot-spacious no-print" title="Bấm để phân lịch vào ca này">
+                                        <i class="fa-solid fa-plus me-1 text-muted opacity-75"></i> Tiết trống
                                     </a>
-                                    <span class="text-muted small d-none d-print-block">—</span>
+                                    <span class="text-muted small d-none d-print-block text-center py-2">—</span>
                                 <?php endif; ?>
                             </td>
                         <?php endforeach; ?>

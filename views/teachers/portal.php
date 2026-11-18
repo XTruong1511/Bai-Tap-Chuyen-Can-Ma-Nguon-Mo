@@ -1,5 +1,6 @@
 <?php
 $pageTitle = 'Cổng thông tin GV';
+$isFluid = true;
 require_once __DIR__ . '/../layouts/header.php';
 use App\Models\Schedule;
 use App\Helpers\Auth;
@@ -119,44 +120,45 @@ use App\Helpers\Auth;
     </div>
 
     <div class="table-responsive">
-        <table class="table table-matrix-modern mb-0 text-nowrap">
+        <table class="table table-matrix-spacious mb-0 text-nowrap">
             <thead>
                 <tr>
-                    <th style="width: 125px;">Ca / Tiết</th>
+                    <th style="width: 130px;" class="py-3">Ca / Tiết</th>
                     <?php foreach (Schedule::DAYS as $d): ?>
-                        <th style="width: 14%;"><?= $d ?></th>
+                        <th style="width: 14%;" class="py-3"><?= $d ?></th>
                     <?php endforeach; ?>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach (Schedule::SHIFTS as $shift): ?>
                     <tr>
-                        <td class="bg-light fw-semibold text-dark small text-start ps-2 align-middle">
-                            <div class="text-primary" style="font-size: 0.78rem;"><?= $shift ?></div>
+                        <td class="bg-light fw-semibold text-dark small text-start ps-3 align-middle" style="background-color: #f8fafc !important;">
+                            <div class="text-primary fw-bold" style="font-size: 0.8rem;"><?= $shift ?></div>
                         </td>
 
                         <?php foreach (Schedule::DAYS as $day): ?>
                             <?php $items = $timetableMatrix[$shift][$day] ?? []; ?>
-                            <td class="matrix-cell align-middle bg-white text-center">
+                            <td class="matrix-cell-spacious align-top bg-white">
                                 <?php if (!empty($items)): ?>
-                                    <?php foreach ($items as $item): ?>
-                                        <div class="schedule-card-modern badge-branch-<?= ($item['branch_id'] % 4) + 1 ?>" 
-                                             title="<?= htmlspecialchars($item['subject_name']) ?> - Phòng <?= htmlspecialchars($item['room']) ?>">
-                                            <div class="fw-semibold text-truncate" style="font-size: 0.74rem;">
-                                                <?= htmlspecialchars($item['subject_name']) ?>
+                                    <div class="d-flex flex-column gap-1">
+                                        <?php foreach ($items as $item): ?>
+                                            <div class="schedule-card-spacious card-branch-<?= ($item['branch_id'] % 4) + 1 ?>">
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    <div class="fw-bold text-dark text-truncate pe-1" style="font-size: 0.8rem;" title="<?= htmlspecialchars($item['subject_name']) ?>">
+                                                        <?= htmlspecialchars($item['subject_name']) ?>
+                                                    </div>
+                                                    <span class="badge bg-light text-dark border px-1" style="font-size: 0.7rem; font-weight: 600;">
+                                                        <?= htmlspecialchars($item['room']) ?>
+                                                    </span>
+                                                </div>
+                                                <div class="small text-muted text-truncate" style="font-size: 0.73rem;">
+                                                    <i class="fa-solid fa-location-dot me-1 text-danger"></i><?= htmlspecialchars($item['branch_name']) ?>
+                                                </div>
                                             </div>
-                                            <div class="d-flex justify-content-between text-truncate mt-1" style="font-size: 0.68rem;">
-                                                <span class="text-truncate" style="max-width: 85px;">
-                                                    <?= htmlspecialchars($item['branch_name']) ?>
-                                                </span>
-                                                <span class="badge bg-white text-dark border py-0 px-1">
-                                                    <?= htmlspecialchars($item['room']) ?>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    <?php endforeach; ?>
+                                        <?php endforeach; ?>
+                                    </div>
                                 <?php else: ?>
-                                    <span class="text-muted" style="font-size: 0.72rem;">—</span>
+                                    <span class="text-muted d-block text-center py-3" style="font-size: 0.76rem;">—</span>
                                 <?php endif; ?>
                             </td>
                         <?php endforeach; ?>

@@ -330,6 +330,123 @@ $flash = Auth::getFlash();
             border-color: #93c5fd;
         }
 
+        /* Spacious Timetable Matrix */
+        .table-matrix-spacious {
+            min-width: 1250px;
+            table-layout: fixed;
+            background-color: #ffffff;
+            margin-bottom: 0;
+        }
+
+        .table-matrix-spacious thead th {
+            background-color: #f8fafc;
+            color: #334155;
+            font-weight: 600;
+            font-size: 0.82rem;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+        }
+
+        .table-matrix-spacious td {
+            border: 1px solid #e2e8f0;
+            vertical-align: top !important;
+            padding: 8px !important;
+            background-color: #ffffff;
+        }
+
+        .matrix-cell-spacious {
+            min-height: 80px;
+        }
+
+        /* Spacious Schedule Card */
+        .schedule-card-spacious {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 7px 10px;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
+            border-left: 3px solid #3b82f6;
+            transition: all 0.15s ease;
+            text-align: left;
+        }
+
+        .schedule-card-spacious:hover {
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
+            transform: translateY(-1px);
+        }
+
+        .schedule-card-spacious.card-branch-1 {
+            border-left-color: #2563eb;
+            background: linear-gradient(to right, #f8faff 0%, #ffffff 40%);
+        }
+
+        .schedule-card-spacious.card-branch-2 {
+            border-left-color: #f97316;
+            background: linear-gradient(to right, #fffaf5 0%, #ffffff 40%);
+        }
+
+        .schedule-card-spacious.card-branch-3 {
+            border-left-color: #9333ea;
+            background: linear-gradient(to right, #faf5ff 0%, #ffffff 40%);
+        }
+
+        .schedule-card-spacious.card-branch-4 {
+            border-left-color: #16a34a;
+            background: linear-gradient(to right, #f7fdf9 0%, #ffffff 40%);
+        }
+
+        .empty-slot-spacious {
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #cbd5e1;
+            border-radius: 8px;
+            color: #94a3b8;
+            font-size: 0.76rem;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            background-color: #fafbfc;
+        }
+
+        .empty-slot-spacious:hover {
+            background-color: #eff6ff;
+            color: #2563eb;
+            border-color: #93c5fd;
+        }
+
+        /* Branch Filter Tabs */
+        .nav-tabs-branch {
+            border-bottom: 1px solid #e2e8f0;
+            gap: 4px;
+        }
+
+        .nav-tabs-branch .nav-link-tab {
+            color: #64748b;
+            font-size: 0.83rem;
+            font-weight: 500;
+            padding: 0.45rem 0.9rem;
+            border-radius: 8px 8px 0 0;
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: all 0.15s ease;
+            background-color: transparent;
+        }
+
+        .nav-tabs-branch .nav-link-tab:hover {
+            color: #0f172a;
+            background-color: #f1f5f9;
+        }
+
+        .nav-tabs-branch .nav-link-tab.active {
+            color: #2563eb;
+            background-color: #ffffff;
+            border-color: #e2e8f0 #e2e8f0 #ffffff;
+            font-weight: 600;
+        }
+
         @media print {
             .no-print {
                 display: none !important;
@@ -472,7 +589,7 @@ $flash = Auth::getFlash();
 
 <!-- Main Container Content -->
 <main class="main-wrapper py-3">
-    <div class="container">
+    <div class="<?= !empty($isFluid) ? 'container-fluid px-3 px-xl-4' : 'container' ?>">
         <!-- Flash Alert Message -->
         <?php if ($flash): ?>
             <div class="alert alert-<?= htmlspecialchars($flash['type']) ?> alert-dismissible fade show border py-2 px-3 mb-3" role="alert">
