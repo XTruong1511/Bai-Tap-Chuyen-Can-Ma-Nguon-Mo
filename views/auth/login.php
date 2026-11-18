@@ -45,27 +45,6 @@ require_once __DIR__ . '/../layouts/header.php';
                 </button>
             </form>
 
-            <hr class="my-3 opacity-25">
-
-            <!-- Quick Demo Credentials -->
-            <div>
-                <div class="text-muted small fw-medium mb-2">Đăng nhập nhanh:</div>
-                <div class="d-grid gap-1">
-                    <a href="index.php?controller=auth&action=quick_login&role=admin" class="btn btn-sm btn-light border text-start d-flex justify-content-between align-items-center py-1 px-2">
-                        <span><i class="fa-solid fa-user-shield text-primary me-2"></i><strong>Quản trị viên</strong></span>
-                        <span class="badge bg-primary-subtle text-primary small">Admin</span>
-                    </a>
-                    <a href="index.php?controller=auth&action=quick_login&role=teacher&id=1" class="btn btn-sm btn-light border text-start d-flex justify-content-between align-items-center py-1 px-2">
-                        <span><i class="fa-solid fa-chalkboard-user text-success me-2"></i><strong>TS. Nguyễn Văn Hùng</strong></span>
-                        <span class="badge bg-success-subtle text-success small">GV</span>
-                    </a>
-                    <a href="index.php?controller=auth&action=quick_login&role=teacher&id=2" class="btn btn-sm btn-light border text-start d-flex justify-content-between align-items-center py-1 px-2">
-                        <span><i class="fa-solid fa-chalkboard-user text-info me-2"></i><strong>ThS. Trần Thị Mai</strong></span>
-                        <span class="badge bg-info-subtle text-info small">GV</span>
-                    </a>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>

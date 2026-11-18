@@ -463,37 +463,15 @@ $flash = Auth::getFlash();
 </head>
 <body>
 
-<!-- Clean Header Bar -->
-<div class="topbar-clean no-print">
-    <div class="container d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center gap-2 text-nowrap">
-            <span class="badge bg-light text-secondary border">HUIT</span>
-            <span class="text-secondary small fw-medium">Đại học Công Thương TP.HCM</span>
-        </div>
-        <div class="d-flex align-items-center gap-2 text-nowrap">
-            <span class="text-muted small">Đăng nhập nhanh:</span>
-            <a href="index.php?controller=auth&action=quick_login&role=admin" class="badge text-bg-primary text-decoration-none py-1 px-2">
-                <i class="fa-solid fa-user-shield me-1"></i> Admin
-            </a>
-            <a href="index.php?controller=auth&action=quick_login&role=teacher&id=1" class="badge text-bg-light border text-dark text-decoration-none py-1 px-2">
-                <i class="fa-solid fa-user me-1"></i> GV Hùng
-            </a>
-            <a href="index.php?controller=auth&action=quick_login&role=teacher&id=2" class="badge text-bg-light border text-dark text-decoration-none py-1 px-2">
-                <i class="fa-solid fa-user me-1"></i> GV Mai
-            </a>
-        </div>
-    </div>
-</div>
-
 <!-- Modern Navbar -->
 <nav class="navbar navbar-expand-lg navbar-modern sticky-top no-print">
     <div class="container">
         <a class="navbar-brand text-nowrap py-0" href="index.php">
             <div class="brand-logo-box">
-                <i class="fa-solid fa-calendar-check"></i>
+                <i class="fa-solid fa-graduation-cap"></i>
             </div>
             <div>
-                <span class="fw-bold text-dark">Schedule Hub</span>
+                <span class="fw-bold text-dark">HUIT Schedule Hub</span>
             </div>
         </a>
 
