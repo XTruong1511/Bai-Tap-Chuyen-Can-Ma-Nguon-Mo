@@ -107,7 +107,7 @@ use App\Helpers\Auth;
                             <div class="col-md-6">
                                 <div class="p-2.5 rounded border border-start border-3 border-primary bg-white h-100 shadow-none text-nowrap">
                                     <div class="d-flex justify-content-between align-items-center mb-1">
-                                        <span class="badge-branch-<?= ($bId % 4) + 1 ?>">
+                                        <span class="badge-branch-<?= ((($bId - 1) % 7) + 1) ?>">
                                             <i class="fa-solid fa-building me-1"></i><?= htmlspecialchars($bName) ?>
                                         </span>
                                         <span class="badge bg-light text-dark border"><?= count($bSchedules) ?> ca học</span>
@@ -171,7 +171,7 @@ use App\Helpers\Auth;
                                 <?php if (!empty($items)): ?>
                                     <div class="d-flex flex-column gap-1">
                                         <?php foreach ($items as $item): ?>
-                                            <div class="matrix-card matrix-card-cs<?= ($item['branch_id'] % 4) + 1 ?>">
+                                            <div class="matrix-card matrix-card-cs<?= ((($item['branch_id'] ?? 1) - 1) % 7) + 1 ?>">
                                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                                     <div class="fw-bold text-dark text-truncate pe-1" style="font-size: 0.81rem;" title="<?= htmlspecialchars($item['subject_name']) ?>">
                                                         <?= htmlspecialchars($item['subject_name']) ?>
@@ -181,7 +181,7 @@ use App\Helpers\Auth;
                                                     </span>
                                                 </div>
                                                 <div class="d-flex justify-content-between align-items-center text-muted" style="font-size: 0.72rem;">
-                                                    <span class="badge-branch-<?= ($item['branch_id'] % 4) + 1 ?>" style="font-size: 0.64rem; padding: 1px 6px;">
+                                                    <span class="badge-branch-<?= ((($item['branch_id'] - 1) % 7) + 1) ?>" style="font-size: 0.64rem; padding: 1px 6px;">
                                                         <?= htmlspecialchars($item['branch_name']) ?>
                                                     </span>
                                                 </div>
@@ -233,7 +233,7 @@ use App\Helpers\Auth;
                                 <span class="fw-semibold text-dark"><?= htmlspecialchars($s['subject_name']) ?></span>
                             </td>
                             <td>
-                                <span class="badge-branch-<?= ($s['branch_id'] % 4) + 1 ?>">
+                                <span class="badge-branch-<?= ((($s['branch_id'] - 1) % 7) + 1) ?>">
                                     <?= htmlspecialchars($s['branch_name']) ?>
                                 </span>
                             </td>

@@ -283,6 +283,39 @@ $flash = Auth::getFlash();
             display: inline-block;
         }
 
+        .badge-branch-5 {
+            background-color: #fff1f2 !important;
+            color: #be123c !important;
+            border: 1px solid #fecdd3 !important;
+            font-weight: 500;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
+        }
+
+        .badge-branch-6 {
+            background-color: #ecfeff !important;
+            color: #0e7490 !important;
+            border: 1px solid #a5f3fc !important;
+            font-weight: 500;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
+        }
+
+        .badge-branch-7 {
+            background-color: #eef2ff !important;
+            color: #4338ca !important;
+            border: 1px solid #c7d2fe !important;
+            font-weight: 500;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
+        }
+
         /* Modern Linear Segmented Control for Campus Tabs */
         .campus-segmented-control {
             background-color: #f1f5f9;
@@ -422,6 +455,18 @@ $flash = Auth::getFlash();
         .matrix-card-cs4 { 
             border-left: 3.5px solid #16a34a !important; 
             background: linear-gradient(to right, #f7fdf9 0%, #ffffff 40%);
+        }
+        .matrix-card-cs5 { 
+            border-left: 3.5px solid #e11d48 !important; 
+            background: linear-gradient(to right, #fff1f2 0%, #ffffff 40%);
+        }
+        .matrix-card-cs6 { 
+            border-left: 3.5px solid #0891b2 !important; 
+            background: linear-gradient(to right, #ecfeff 0%, #ffffff 40%);
+        }
+        .matrix-card-cs7 { 
+            border-left: 3.5px solid #4f46e5 !important; 
+            background: linear-gradient(to right, #eef2ff 0%, #ffffff 40%);
         }
 
         .matrix-empty-slot {

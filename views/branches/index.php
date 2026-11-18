@@ -44,7 +44,7 @@ require_once __DIR__ . '/../layouts/header.php';
                             <td class="text-muted small fw-medium text-center">CS<?= $b['id'] ?></td>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <span class="badge-branch-<?= ($b['id'] % 4) + 1 ?>">
+                                    <span class="badge-branch-<?= ((($b['id'] ?? 1) - 1) % 7) + 1 ?>">
                                         <i class="fa-solid fa-location-dot"></i> CS<?= $b['id'] ?>
                                     </span>
                                     <span class="fw-semibold text-dark"><?= htmlspecialchars($b['branch_name']) ?></span>

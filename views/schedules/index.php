@@ -149,7 +149,7 @@ use App\Models\Schedule;
                                 </a>
                             </td>
                             <td>
-                                <span class="badge-branch-<?= ($s['branch_id'] % 4) + 1 ?>">
+                                <span class="badge-branch-<?= ((($s['branch_id'] ?? 1) - 1) % 7) + 1 ?>">
                                     <?= htmlspecialchars($s['branch_name']) ?>
                                 </span>
                             </td>

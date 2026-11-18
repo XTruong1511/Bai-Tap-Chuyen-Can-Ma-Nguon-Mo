@@ -127,7 +127,7 @@ require_once __DIR__ . '/../layouts/header.php';
         <div class="card card-custom h-100">
             <div class="card-header-custom py-2 px-3 d-flex justify-content-between align-items-center">
                 <span><i class="fa-solid fa-chart-pie me-1.5 text-primary"></i>Phân bổ theo Cơ sở</span>
-                <span class="badge bg-light text-secondary border fw-medium" style="font-size: 0.7rem;">4 Cơ sở</span>
+                <span class="badge bg-light text-secondary border fw-medium" style="font-size: 0.7rem;"><?= count($stats['branch_stats'] ?? []) ?> Cơ sở</span>
             </div>
             <div class="card-body p-3 d-flex flex-column justify-content-between">
                 <div style="width: 100%; max-width: 260px; height: 185px; margin: 0 auto;">
@@ -136,12 +136,21 @@ require_once __DIR__ . '/../layouts/header.php';
                 <div class="mt-3 w-100">
                     <ul class="list-group list-group-flush small">
                         <?php 
-                            $dotColors = [1 => '#2563eb', 2 => '#f97316', 3 => '#9333ea', 4 => '#16a34a'];
+                            $dotColors = [
+                                1 => '#2563eb', 
+                                2 => '#ea580c', 
+                                3 => '#9333ea', 
+                                4 => '#16a34a',
+                                5 => '#e11d48',
+                                6 => '#0891b2',
+                                7 => '#4f46e5'
+                            ];
                         ?>
                         <?php foreach ($stats['branch_stats'] as $bs): ?>
                             <?php 
                                 $bId = (int)($bs['branch_id'] ?? $bs['id'] ?? 1);
-                                $dotColor = $dotColors[$bId] ?? '#64748b'; 
+                                $colorIdx = (($bId - 1) % 7) + 1;
+                                $dotColor = $dotColors[$colorIdx] ?? '#64748b'; 
                             ?>
                             <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 border-0 text-nowrap">
                                 <span class="text-truncate d-flex align-items-center" style="max-width: 220px;">
@@ -258,7 +267,7 @@ require_once __DIR__ . '/../layouts/header.php';
                                 </div>
                             </td>
                             <td>
-                                <span class="badge-branch-<?= ($s['branch_id'] % 4) + 1 ?>">
+                                <span class="badge-branch-<?= ((($s['branch_id'] ?? 1) - 1) % 7) + 1 ?>">
                                     <?= htmlspecialchars($s['branch_name']) ?>
                                 </span>
                             </td>
@@ -304,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
             labels: branchData.map(b => b.branch_name),
             datasets: [{
                 data: branchData.map(b => b.count),
-                backgroundColor: ['#2563eb', '#f97316', '#9333ea', '#16a34a', '#64748b'],
+                backgroundColor: ['#2563eb', '#ea580c', '#9333ea', '#16a34a', '#e11d48', '#0891b2', '#4f46e5'],
                 borderWidth: 2,
                 borderColor: '#ffffff',
                 hoverOffset: 4

@@ -129,7 +129,7 @@ use App\Models\Schedule;
                                 <?php if (!empty($items)): ?>
                                     <div class="d-flex flex-column gap-2">
                                         <?php foreach ($items as $item): ?>
-                                            <div class="matrix-card matrix-card-cs<?= ($item['branch_id'] % 4) + 1 ?>">
+                                            <div class="matrix-card matrix-card-cs<?= ((($item['branch_id'] ?? 1) - 1) % 7) + 1 ?>">
                                                 <!-- Subject Title and Room -->
                                                 <div class="d-flex justify-content-between align-items-start gap-1 mb-1">
                                                     <div class="fw-bold text-dark text-truncate" style="font-size: 0.81rem;" title="<?= htmlspecialchars($item['subject_name']) ?>">
@@ -147,7 +147,7 @@ use App\Models\Schedule;
                                                     </span>
                                                     
                                                     <?php if (empty($branchId)): ?>
-                                                        <span class="badge-branch-<?= ($item['branch_id'] % 4) + 1 ?>" style="font-size: 0.64rem; padding: 1px 6px;">
+                                                        <span class="badge-branch-<?= ((($item['branch_id'] ?? 1) - 1) % 7) + 1 ?>" style="font-size: 0.64rem; padding: 1px 6px;">
                                                             CS<?= $item['branch_id'] ?>
                                                         </span>
                                                     <?php else: ?>
