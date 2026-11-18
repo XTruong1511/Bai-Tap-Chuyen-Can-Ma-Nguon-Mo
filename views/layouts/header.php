@@ -147,35 +147,46 @@ $flash = Auth::getFlash();
         .badge-branch-4 { background-color: #059669; color: white; }
         .badge-branch-default { background-color: #475569; color: white; }
 
-        /* Timetable Matrix Grid */
-        .table-matrix th, .table-matrix td {
-            vertical-align: middle;
-            text-align: center;
+        /* Timetable Matrix Grid & Table 1-line enforcement */
+        .table th, .table td {
+            white-space: nowrap !important;
+            vertical-align: middle !important;
+        }
+
+        .text-nowrap-cell {
+            white-space: nowrap !important;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .matrix-cell {
-            min-height: 85px;
-            padding: 6px;
+            min-height: 70px;
+            padding: 4px !important;
+            vertical-align: middle !important;
         }
 
         .schedule-pill {
-            font-size: 0.78rem;
-            border-radius: 6px;
-            padding: 6px 8px;
-            margin-bottom: 4px;
+            font-size: 0.75rem;
+            border-radius: 5px;
+            padding: 3px 6px;
+            margin-bottom: 2px;
             text-align: left;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.08);
         }
 
         .empty-slot-btn {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #94a3b8;
             border: 1px dashed #cbd5e1;
-            border-radius: 6px;
-            padding: 4px;
+            border-radius: 5px;
+            padding: 2px 4px;
             width: 100%;
             display: inline-block;
             text-decoration: none;
+            white-space: nowrap;
             transition: all 0.2s;
         }
 
@@ -201,42 +212,32 @@ $flash = Auth::getFlash();
 </head>
 <body>
 
-<!-- Top Notification Bar / Quick Switcher -->
-<div class="bg-dark text-white py-1 px-3 d-none d-md-block no-print" style="font-size: 0.8rem; background-color: #051a2c !important;">
+<!-- Top Bar -->
+<div class="bg-dark text-white py-1 px-3 d-none d-md-block no-print" style="font-size: 0.78rem; background-color: #051a2c !important;">
     <div class="container d-flex justify-content-between align-items-center">
-        <div>
+        <div class="text-nowrap">
             <i class="fa-solid fa-graduation-cap text-warning me-1"></i>
-            <strong>TRƯỜNG ĐẠI HỌC CÔNG THƯƠNG TP. HỒ CHÍ MINH (HUIT)</strong>
-            <span class="text-white-50 ms-2">| Hệ thống Phân lịch Giảng dạy Đa cơ sở Thông minh</span>
+            <strong>HUIT SCHEDULE HUB</strong>
         </div>
-        <div class="d-flex align-items-center gap-3">
-            <span class="text-white-50">Chuyển nhanh:</span>
-            <a href="index.php?controller=auth&action=quick_login&role=admin" class="badge text-bg-warning text-decoration-none">
-                <i class="fa-solid fa-user-shield me-1"></i> Admin
-            </a>
-            <a href="index.php?controller=auth&action=quick_login&role=teacher&id=1" class="badge text-bg-info text-decoration-none">
-                <i class="fa-solid fa-chalkboard-user me-1"></i> GV: TS. Nguyễn Văn Hùng
-            </a>
-            <a href="index.php?controller=auth&action=quick_login&role=teacher&id=2" class="badge text-bg-success text-decoration-none">
-                <i class="fa-solid fa-chalkboard-user me-1"></i> GV: ThS. Trần Thị Mai
-            </a>
+        <div class="d-flex align-items-center gap-2 text-nowrap">
+            <span class="text-white-50 small">Chuyển nhanh:</span>
+            <a href="index.php?controller=auth&action=quick_login&role=admin" class="badge text-bg-warning text-decoration-none">Admin</a>
+            <a href="index.php?controller=auth&action=quick_login&role=teacher&id=1" class="badge text-bg-info text-decoration-none">GV Hùng</a>
+            <a href="index.php?controller=auth&action=quick_login&role=teacher&id=2" class="badge text-bg-success text-decoration-none">GV Mai</a>
         </div>
     </div>
 </div>
 
 <!-- Main Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-huit sticky-top no-print">
+<nav class="navbar navbar-expand-lg navbar-huit sticky-top no-print py-2">
     <div class="container">
-        <a class="navbar-brand" href="index.php">
-            <i class="fa-solid fa-calendar-check text-warning fs-4"></i>
-            <div>
-                <span>HUIT Schedule Hub</span>
-                <span class="huit-badge-brand ms-1">Multi-Campus</span>
-            </div>
+        <a class="navbar-brand text-nowrap py-0" href="index.php">
+            <i class="fa-solid fa-calendar-check text-warning fs-5"></i>
+            <span>HUIT Schedule Hub</span>
         </a>
 
         <button class="navbar-toggler text-white border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
-            <i class="fa-solid fa-bars fs-4"></i>
+            <i class="fa-solid fa-bars fs-5"></i>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarContent">

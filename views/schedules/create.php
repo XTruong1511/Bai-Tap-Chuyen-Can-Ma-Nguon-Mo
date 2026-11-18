@@ -9,15 +9,12 @@ $defaultBranch = (int)($_GET['branch_id'] ?? 1);
 $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">
-            <i class="fa-solid fa-calendar-plus text-primary me-2"></i>Thêm Lịch Giảng Dạy Mới
-        </h3>
-        <p class="text-muted mb-0 small">Hệ thống tích hợp thuật toán gợi ý giảng viên chuyên môn và kiểm tra xung đột đa cơ sở.</p>
-    </div>
-    <a href="index.php?controller=schedule&action=index" class="btn btn-outline-secondary btn-sm">
-        <i class="fa-solid fa-arrow-left me-1"></i> Quay lại danh sách
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold text-dark mb-0">
+        <i class="fa-solid fa-calendar-plus text-primary me-2"></i>Thêm Lịch Giảng Dạy
+    </h4>
+    <a href="index.php?controller=schedule&action=index" class="btn btn-outline-secondary btn-sm text-nowrap">
+        <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
 </div>
 
@@ -45,16 +42,13 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
                     <!-- Subject Name -->
                     <div class="mb-3">
                         <label for="subject_name" class="form-label fw-bold">
-                            Tên học phần / Môn học <span class="text-danger">*</span>
+                            Tên học phần <span class="text-danger">*</span>
                         </label>
                         <div class="input-group">
                             <span class="input-group-text bg-light"><i class="fa-solid fa-book-open text-muted"></i></span>
                             <input type="text" class="form-control" id="subject_name" name="subject_name" 
-                                   placeholder="Ví dụ: Lập trình mã nguồn mở PHP, An ninh mạng, Trí tuệ nhân tạo..." 
+                                   placeholder="Nhập tên môn học..." 
                                    value="<?= htmlspecialchars($_POST['subject_name'] ?? '') ?>" required>
-                        </div>
-                        <div class="form-text small">
-                            Hệ thống sẽ dựa vào tên môn học này để phân tích chuyên môn (expertise) và gợi ý giảng viên phù hợp.
                         </div>
                     </div>
 
@@ -155,18 +149,12 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
     <!-- Right Column: Smart Teacher Recommendation Panel -->
     <div class="col-lg-5">
         <div class="card card-custom h-100">
-            <div class="card-header-custom bg-light d-flex justify-content-between align-items-center">
-                <span>
-                    <i class="fa-solid fa-robot text-primary me-2"></i>
-                    <strong>HUIT Smart Advisor</strong>
+            <div class="card-header-custom py-2 px-3 bg-light d-flex justify-content-between align-items-center">
+                <span class="small fw-bold">
+                    <i class="fa-solid fa-wand-magic-sparkles text-primary me-1"></i>Gợi ý Giảng viên
                 </span>
-                <span class="badge bg-warning text-dark"><i class="fa-solid fa-brain me-1"></i>AI Recommendation</span>
             </div>
             <div class="card-body p-3">
-                <div class="alert alert-primary bg-primary bg-opacity-10 border-0 small mb-3">
-                    <i class="fa-solid fa-circle-info me-1"></i>
-                    Thuật toán tự động đối chiếu môn học với chuyên môn giảng viên, loại bỏ các giảng viên bận giờ đó, và ưu tiên người dạy cùng cơ sở để tối ưu di chuyển.
-                </div>
 
                 <div id="recommendationLoading" class="text-center py-4 text-muted" style="display: none;">
                     <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>

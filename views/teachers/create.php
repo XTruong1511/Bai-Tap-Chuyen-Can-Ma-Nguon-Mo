@@ -3,14 +3,11 @@ $pageTitle = 'Thêm Giảng viên mới';
 require_once __DIR__ . '/../layouts/header.php';
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">
-            <i class="fa-solid fa-user-plus text-primary me-2"></i>Thêm Giảng viên Mới
-        </h3>
-        <p class="text-muted mb-0 small">Khai báo thông tin giảng viên và lĩnh vực chuyên môn để tối ưu thuật toán xếp lịch.</p>
-    </div>
-    <a href="index.php?controller=teacher&action=index" class="btn btn-outline-secondary btn-sm">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold text-dark mb-0">
+        <i class="fa-solid fa-user-plus text-primary me-2"></i>Thêm Giảng viên Mới
+    </h4>
+    <a href="index.php?controller=teacher&action=index" class="btn btn-outline-secondary btn-sm text-nowrap">
         <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
 </div>
@@ -58,11 +55,8 @@ require_once __DIR__ . '/../layouts/header.php';
                     <div class="mb-3">
                         <label for="expertise" class="form-label fw-bold">Chuyên môn chính <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" id="expertise" name="expertise" 
-                               placeholder="Ví dụ: Công nghệ phần mềm & Lập trình Web PHP, Trí tuệ nhân tạo..."
+                               placeholder="Ví dụ: Công nghệ phần mềm & Lập trình Web..."
                                value="<?= htmlspecialchars($_POST['expertise'] ?? '') ?>" required>
-                        <div class="form-text small">
-                            Các từ khóa trong mục này sẽ được hệ thống phân tích để gợi ý môn học phù hợp.
-                        </div>
                     </div>
 
                     <div class="mb-4">

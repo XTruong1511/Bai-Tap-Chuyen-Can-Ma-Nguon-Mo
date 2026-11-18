@@ -3,14 +3,11 @@ $pageTitle = 'Thêm Cơ sở mới';
 require_once __DIR__ . '/../layouts/header.php';
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">
-            <i class="fa-solid fa-plus-circle text-primary me-2"></i>Thêm Cơ sở Mới
-        </h3>
-        <p class="text-muted mb-0 small">Khai báo địa điểm học tập, trung tâm thực hành hoặc cơ sở liên kết của HUIT.</p>
-    </div>
-    <a href="index.php?controller=branch&action=index" class="btn btn-outline-secondary btn-sm">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold text-dark mb-0">
+        <i class="fa-solid fa-plus-circle text-primary me-2"></i>Thêm Cơ sở Mới
+    </h4>
+    <a href="index.php?controller=branch&action=index" class="btn btn-outline-secondary btn-sm text-nowrap">
         <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
 </div>

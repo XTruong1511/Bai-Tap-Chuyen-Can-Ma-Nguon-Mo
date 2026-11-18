@@ -4,15 +4,12 @@ require_once __DIR__ . '/../layouts/header.php';
 use App\Models\Schedule;
 ?>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h3 class="fw-bold text-dark mb-1">
-            <i class="fa-solid fa-pen-to-square text-primary me-2"></i>Chỉnh sửa Lịch Giảng Dạy #<?= $schedule['id'] ?>
-        </h3>
-        <p class="text-muted mb-0 small">Cập nhật thông tin học phần, giảng viên, cơ sở hoặc phòng học.</p>
-    </div>
-    <a href="index.php?controller=schedule&action=index" class="btn btn-outline-secondary btn-sm">
-        <i class="fa-solid fa-arrow-left me-1"></i> Quay lại danh sách
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="fw-bold text-dark mb-0">
+        <i class="fa-solid fa-pen-to-square text-primary me-2"></i>Chỉnh sửa Lịch #<?= $schedule['id'] ?>
+    </h4>
+    <a href="index.php?controller=schedule&action=index" class="btn btn-outline-secondary btn-sm text-nowrap">
+        <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
 </div>
 

@@ -7,12 +7,11 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="col-md-8 col-lg-5">
         <div class="card card-custom shadow-sm border-0">
             <div class="card-body p-4 p-md-5">
-                <div class="text-center mb-4">
-                    <div class="d-inline-flex p-3 rounded-circle bg-primary bg-opacity-10 text-primary mb-3">
+                <div class="text-center mb-3">
+                    <div class="d-inline-flex p-3 rounded-circle bg-primary bg-opacity-10 text-primary mb-2">
                         <i class="fa-solid fa-graduation-cap fa-2x" style="color: var(--huit-blue);"></i>
                     </div>
-                    <h3 class="fw-bold text-dark">HUIT Schedule Hub</h3>
-                    <p class="text-muted small">Cổng phân lịch & Tra cứu thời khóa biểu đa cơ sở</p>
+                    <h4 class="fw-bold text-dark mb-0">HUIT Schedule Hub</h4>
                 </div>
 
                 <?php if (!empty($error)): ?>
