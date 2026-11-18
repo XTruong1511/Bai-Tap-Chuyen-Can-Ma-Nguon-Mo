@@ -56,12 +56,23 @@ use App\Models\Schedule;
                 <?php if ($branchId): ?><input type="hidden" name="branch_id" value="<?= $branchId ?>"><?php endif; ?>
                 
                 <span class="small text-muted fw-medium"><i class="fa-solid fa-user-filter me-1 text-primary"></i>Lọc theo GV:</span>
-                <select name="teacher_id" class="form-select form-select-sm" style="width: auto; min-width: 180px;" onchange="this.form.submit()">
+                <select name="teacher_id" class="form-select form-select-sm" style="width: auto; min-width: 190px;" onchange="this.form.submit()">
                     <option value="">-- Tất cả giảng viên --</option>
-                    <?php foreach ($teachers as $t): ?>
-                        <option value="<?= $t['id'] ?>" <?= ($teacherId === (int)$t['id']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($t['full_name']) ?>
-                        </option>
+                    <?php 
+                        $groupedByDept = [];
+                        foreach ($teachers as $t) {
+                            $d = $t['department'] ?? 'Bộ môn khác';
+                            $groupedByDept[$d][] = $t;
+                        }
+                        foreach ($groupedByDept as $deptName => $deptTeachers):
+                    ?>
+                        <optgroup label="<?= htmlspecialchars($deptName) ?>">
+                            <?php foreach ($deptTeachers as $t): ?>
+                                <option value="<?= $t['id'] ?>" <?= ($teacherId === (int)$t['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($t['full_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </optgroup>
                     <?php endforeach; ?>
                 </select>
             </form>

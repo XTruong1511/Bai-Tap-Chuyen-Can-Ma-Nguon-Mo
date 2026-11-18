@@ -5,9 +5,9 @@ use App\Models\Schedule;
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
-    <h4 class="fw-bold text-dark mb-0">
-        <i class="fa-solid fa-pen-to-square text-primary me-2"></i>Chỉnh sửa Lịch #<?= $schedule['id'] ?>
-    </h4>
+    <h5 class="fw-bold text-dark mb-0">
+        <i class="fa-solid fa-pen-to-square text-primary me-2"></i>Chỉnh sửa Lịch Giảng Dạy #<?= $schedule['id'] ?>
+    </h5>
     <a href="index.php?controller=schedule&action=index" class="btn-modern-outline">
         <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
@@ -79,15 +79,64 @@ use App\Models\Schedule;
                         </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="teacher_id" class="form-label fw-bold">Giảng viên phụ trách <span class="text-danger">*</span></label>
-                        <select class="form-select" id="teacher_id" name="teacher_id" required>
-                            <?php foreach ($teachers as $t): ?>
-                                <option value="<?= $t['id'] ?>" <?= (($schedule['teacher_id'] == $t['id'])) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($t['full_name']) ?> (<?= htmlspecialchars($t['expertise']) ?>)
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                    <!-- Teacher Selection (Khoa -> Bộ môn -> Giảng viên) -->
+                    <div class="p-3 rounded border bg-light-subtle mb-3">
+                        <label class="form-label fw-bold mb-2 text-dark">
+                            <i class="fa-solid fa-chalkboard-user text-primary me-1"></i> Phân công Giảng viên <span class="text-danger">*</span>
+                        </label>
+
+                        <!-- 1. Chọn Khoa & 2. Chọn Bộ môn -->
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-6">
+                                <label for="faculty_select" class="form-label small fw-semibold text-muted mb-1">
+                                    <span class="badge bg-secondary-subtle text-secondary me-1">1</span> Chọn Khoa
+                                </label>
+                                <select class="form-select form-select-sm" id="faculty_select">
+                                    <option value="">-- Tất cả Khoa --</option>
+                                    <?php foreach (array_keys($facultiesAndDepartments) as $fac): ?>
+                                        <option value="<?= htmlspecialchars($fac) ?>"><?= htmlspecialchars($fac) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="department_select" class="form-label small fw-semibold text-muted mb-1">
+                                    <span class="badge bg-secondary-subtle text-secondary me-1">2</span> Chọn Bộ môn
+                                </label>
+                                <select class="form-select form-select-sm" id="department_select">
+                                    <option value="">-- Tất cả Bộ môn --</option>
+                                    <?php 
+                                        $allDepts = [];
+                                        foreach ($facultiesAndDepartments as $fac => $depts) {
+                                            foreach ($depts as $d) {
+                                                if (!in_array($d, $allDepts)) $allDepts[] = $d;
+                                            }
+                                        }
+                                        sort($allDepts);
+                                        foreach ($allDepts as $dept):
+                                    ?>
+                                        <option value="<?= htmlspecialchars($dept) ?>"><?= htmlspecialchars($dept) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 3. Giảng viên phụ trách (tên sạch, không có đuôi ngoài sau) -->
+                        <div>
+                            <label for="teacher_id" class="form-label small fw-semibold text-muted mb-1">
+                                <span class="badge bg-primary text-white me-1">3</span> Giảng viên <span class="text-danger">*</span>
+                            </label>
+                            <select class="form-select" id="teacher_id" name="teacher_id" required>
+                                <option value="">-- Chọn Giảng viên --</option>
+                                <?php foreach ($teachers as $t): ?>
+                                    <option value="<?= $t['id'] ?>" 
+                                            data-faculty="<?= htmlspecialchars($t['faculty'] ?? '') ?>" 
+                                            data-department="<?= htmlspecialchars($t['department'] ?? '') ?>"
+                                            <?= (($schedule['teacher_id'] == $t['id'])) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($t['full_name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -106,5 +155,118 @@ use App\Models\Schedule;
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const facultySelect = document.getElementById('faculty_select');
+    const departmentSelect = document.getElementById('department_select');
+    const teacherSelect = document.getElementById('teacher_id');
+
+    const facultyDeptMap = <?= json_encode($facultiesAndDepartments) ?>;
+    const allTeacherOptions = Array.from(teacherSelect.querySelectorAll('option')).filter(opt => opt.value !== "");
+
+    // 1. When Faculty changes
+    facultySelect.addEventListener('change', function () {
+        const selectedFaculty = this.value;
+
+        departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
+        if (selectedFaculty && facultyDeptMap[selectedFaculty]) {
+            facultyDeptMap[selectedFaculty].forEach(dept => {
+                const opt = document.createElement('option');
+                opt.value = dept;
+                opt.textContent = dept;
+                departmentSelect.appendChild(opt);
+            });
+        } else {
+            const allUniqueDepts = new Set();
+            Object.values(facultyDeptMap).forEach(depts => depts.forEach(d => allUniqueDepts.add(d)));
+            Array.from(allUniqueDepts).sort().forEach(dept => {
+                const opt = document.createElement('option');
+                opt.value = dept;
+                opt.textContent = dept;
+                departmentSelect.appendChild(opt);
+            });
+        }
+
+        filterTeachers();
+    });
+
+    // 2. When Department changes
+    departmentSelect.addEventListener('change', function () {
+        filterTeachers();
+    });
+
+    function filterTeachers() {
+        const selectedFaculty = facultySelect.value;
+        const selectedDept = departmentSelect.value;
+        const currentTeacherVal = teacherSelect.value;
+
+        teacherSelect.innerHTML = '<option value="">-- Chọn Giảng viên --</option>';
+
+        allTeacherOptions.forEach(opt => {
+            const optFac = opt.getAttribute('data-faculty');
+            const optDept = opt.getAttribute('data-department');
+
+            const matchFac = !selectedFaculty || optFac === selectedFaculty;
+            const matchDept = !selectedDept || optDept === selectedDept;
+
+            if (matchFac && matchDept) {
+                const clone = opt.cloneNode(true);
+                if (clone.value === currentTeacherVal) {
+                    clone.selected = true;
+                }
+                teacherSelect.appendChild(clone);
+            }
+        });
+    }
+
+    // 3. When Teacher changes directly
+    teacherSelect.addEventListener('change', function () {
+        const selectedOpt = this.options[this.selectedIndex];
+        if (selectedOpt && selectedOpt.value) {
+            const fac = selectedOpt.getAttribute('data-faculty');
+            const dept = selectedOpt.getAttribute('data-department');
+            if (fac && facultySelect.value !== fac) {
+                facultySelect.value = fac;
+                departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
+                if (facultyDeptMap[fac]) {
+                    facultyDeptMap[fac].forEach(d => {
+                        const opt = document.createElement('option');
+                        opt.value = d;
+                        opt.textContent = d;
+                        if (d === dept) opt.selected = true;
+                        departmentSelect.appendChild(opt);
+                    });
+                }
+            } else if (dept && departmentSelect.value !== dept) {
+                departmentSelect.value = dept;
+            }
+        }
+    });
+
+    // Initial sync with schedule's current teacher
+    if (teacherSelect.value) {
+        const selectedOpt = teacherSelect.querySelector(`option[value="${teacherSelect.value}"]`);
+        if (selectedOpt) {
+            const fac = selectedOpt.getAttribute('data-faculty');
+            const dept = selectedOpt.getAttribute('data-department');
+            if (fac) facultySelect.value = fac;
+            if (dept) {
+                departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
+                if (facultyDeptMap[fac]) {
+                    facultyDeptMap[fac].forEach(d => {
+                        const opt = document.createElement('option');
+                        opt.value = d;
+                        opt.textContent = d;
+                        if (d === dept) opt.selected = true;
+                        departmentSelect.appendChild(opt);
+                    });
+                }
+                departmentSelect.value = dept;
+            }
+        }
+    }
+});
+</script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

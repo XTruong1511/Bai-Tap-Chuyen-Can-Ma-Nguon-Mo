@@ -194,10 +194,21 @@ require_once __DIR__ . '/../layouts/header.php';
 
             <select name="teacher_id" class="form-select form-select-sm" style="width: auto;" onchange="this.form.submit()">
                 <option value="">-- Tất cả Giảng viên --</option>
-                <?php foreach ($teachers as $t): ?>
-                    <option value="<?= $t['id'] ?>" <?= ($filterTeacherId === (int)$t['id']) ? 'selected' : '' ?>>
-                        <?= htmlspecialchars($t['full_name']) ?>
-                    </option>
+                <?php 
+                    $groupedByDept = [];
+                    foreach ($teachers as $t) {
+                        $d = $t['department'] ?? 'Bộ môn khác';
+                        $groupedByDept[$d][] = $t;
+                    }
+                    foreach ($groupedByDept as $deptName => $deptTeachers):
+                ?>
+                    <optgroup label="<?= htmlspecialchars($deptName) ?>">
+                        <?php foreach ($deptTeachers as $t): ?>
+                            <option value="<?= $t['id'] ?>" <?= ($filterTeacherId === (int)$t['id']) ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($t['full_name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </optgroup>
                 <?php endforeach; ?>
             </select>
 

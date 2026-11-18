@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS `teachers` (
     `full_name` VARCHAR(150) NOT NULL COMMENT 'Họ và tên giảng viên',
     `email` VARCHAR(150) NOT NULL UNIQUE COMMENT 'Email liên hệ/đăng nhập',
     `phone` VARCHAR(20) NOT NULL COMMENT 'Số điện thoại',
+    `faculty` VARCHAR(150) NOT NULL DEFAULT 'Khoa Công nghệ Thông tin' COMMENT 'Khoa',
+    `department` VARCHAR(150) NOT NULL DEFAULT 'Bộ môn Công nghệ phần mềm' COMMENT 'Bộ môn',
     `expertise` VARCHAR(255) NOT NULL COMMENT 'Chuyên môn chính',
     `password` VARCHAR(255) NOT NULL DEFAULT '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi' COMMENT 'Mật khẩu (mặc định: password / 123456)',
     `avatar` VARCHAR(255) DEFAULT NULL COMMENT 'Ảnh đại diện',

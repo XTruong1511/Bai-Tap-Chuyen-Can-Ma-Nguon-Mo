@@ -37,6 +37,8 @@ class TeacherController
             $fullName = trim($_POST['full_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $phone = trim($_POST['phone'] ?? '');
+            $faculty = trim($_POST['faculty'] ?? 'Khoa Công nghệ Thông tin');
+            $department = trim($_POST['department'] ?? 'Bộ môn Công nghệ phần mềm');
             $expertise = trim($_POST['expertise'] ?? '');
             $password = trim($_POST['password'] ?? '123456');
 
@@ -54,6 +56,8 @@ class TeacherController
                         'full_name' => $fullName,
                         'email' => $email,
                         'phone' => $phone,
+                        'faculty' => $faculty,
+                        'department' => $department,
                         'expertise' => $expertise,
                         'password' => $password
                     ]);
@@ -85,6 +89,8 @@ class TeacherController
             $fullName = trim($_POST['full_name'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $phone = trim($_POST['phone'] ?? '');
+            $faculty = trim($_POST['faculty'] ?? 'Khoa Công nghệ Thông tin');
+            $department = trim($_POST['department'] ?? 'Bộ môn Công nghệ phần mềm');
             $expertise = trim($_POST['expertise'] ?? '');
             $password = trim($_POST['password'] ?? '');
 
@@ -102,6 +108,8 @@ class TeacherController
                         'full_name' => $fullName,
                         'email' => $email,
                         'phone' => $phone,
+                        'faculty' => $faculty,
+                        'department' => $department,
                         'expertise' => $expertise
                     ];
                     if (!empty($password)) {

@@ -20,11 +20,22 @@ use App\Helpers\Auth;
                 <input type="hidden" name="controller" value="teacher">
                 <input type="hidden" name="action" value="portal">
                 <span class="small text-muted fw-medium text-nowrap">Chọn GV:</span>
-                <select name="teacher_id" class="form-select form-select-sm" style="width: auto; min-width: 180px;" onchange="this.form.submit()">
-                    <?php foreach ($allTeachers as $t): ?>
-                        <option value="<?= $t['id'] ?>" <?= ($teacher && $teacher['id'] == $t['id']) ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($t['full_name']) ?>
-                        </option>
+                <select name="teacher_id" class="form-select form-select-sm" style="width: auto; min-width: 190px;" onchange="this.form.submit()">
+                    <?php 
+                        $groupedByDept = [];
+                        foreach ($allTeachers as $t) {
+                            $d = $t['department'] ?? 'Bộ môn khác';
+                            $groupedByDept[$d][] = $t;
+                        }
+                        foreach ($groupedByDept as $deptName => $deptTeachers):
+                    ?>
+                        <optgroup label="<?= htmlspecialchars($deptName) ?>">
+                            <?php foreach ($deptTeachers as $t): ?>
+                                <option value="<?= $t['id'] ?>" <?= ($teacher && $teacher['id'] == $t['id']) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($t['full_name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </optgroup>
                     <?php endforeach; ?>
                 </select>
             </form>

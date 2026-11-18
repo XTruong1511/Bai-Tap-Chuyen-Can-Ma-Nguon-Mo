@@ -57,6 +57,7 @@ class ScheduleController
         $errors = [];
         $branches = $this->branchModel->all();
         $teachers = $this->teacherModel->all();
+        $facultiesAndDepartments = $this->teacherModel->getFacultiesAndDepartments();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $teacherId = (int) ($_POST['teacher_id'] ?? 0);
@@ -128,6 +129,7 @@ class ScheduleController
         $errors = [];
         $branches = $this->branchModel->all();
         $teachers = $this->teacherModel->all();
+        $facultiesAndDepartments = $this->teacherModel->getFacultiesAndDepartments();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $teacherId = (int) ($_POST['teacher_id'] ?? 0);

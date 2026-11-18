@@ -69,26 +69,69 @@ try {
         'Công nghệ thực phẩm & Hóa sinh thực phẩm'
     ];
 
+    $departmentsMap = [
+        'Công nghệ phần mềm & Lập trình Web PHP/Laravel' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Công nghệ phần mềm'
+        ],
+        'Lập trình Web & Di động (React, Flutter, Android)' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Công nghệ phần mềm'
+        ],
+        'Mạng máy tính & An toàn thông tin' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Mạng máy tính & An ninh mạng'
+        ],
+        'Điện toán đám mây & Quản trị hệ thống Linux' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Mạng máy tính & An ninh mạng'
+        ],
+        'Cơ sở dữ liệu & Phân tích hệ thống' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Hệ thống thông tin'
+        ],
+        'Trí tuệ nhân tạo & Học máy (AI/ML)' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Khoa học dữ liệu & Trí tuệ nhân tạo'
+        ],
+        'Khoa học dữ liệu & Trực quan hóa dữ liệu' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Khoa học dữ liệu & Trí tuệ nhân tạo'
+        ],
+        'Kiến trúc máy tính & Hệ điều hành' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Khoa học máy tính'
+        ],
+        'Thiết kế giao diện UI/UX & Đồ họa' => [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Thiết kế đồ họa & Đa phương tiện'
+        ],
+        'Công nghệ thực phẩm & Hóa sinh thực phẩm' => [
+            'faculty' => 'Khoa Công nghệ Thực phẩm',
+            'department' => 'Bộ môn Công nghệ thực phẩm & Hóa sinh'
+        ]
+    ];
+
     $defaultTeacherPassword = password_hash('123456', PASSWORD_BCRYPT);
-    $stmtTeacher = $pdo->prepare("INSERT INTO teachers (full_name, email, phone, expertise, password) VALUES (?, ?, ?, ?, ?)");
+    $stmtTeacher = $pdo->prepare("INSERT INTO teachers (full_name, email, phone, faculty, department, expertise, password) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
     $teacherIds = [];
     $teachersData = [];
 
     // Predefine a few notable real-styled HUIT faculty members
     $coreTeachers = [
-        ['TS. Nguyễn Văn Hùng', 'hungnv@huit.edu.vn', '0903123456', 'Công nghệ phần mềm & Lập trình Web PHP/Laravel'],
-        ['ThS. Trần Thị Mai', 'maitt@huit.edu.vn', '0918234567', 'Lập trình Web & Di động (React, Flutter, Android)'],
-        ['TS. Lê Hoàng Nam', 'namlh@huit.edu.vn', '0937345678', 'Mạng máy tính & An toàn thông tin'],
-        ['ThS. Phạm Quốc Bảo', 'baopq@huit.edu.vn', '0948456789', 'Cơ sở dữ liệu & Phân tích hệ thống'],
-        ['TS. Đặng Thanh Sơn', 'sondt@huit.edu.vn', '0979567890', 'Trí tuệ nhân tạo & Học máy (AI/ML)'],
-        ['ThS. Vũ Thị Bích', 'bichvt@huit.edu.vn', '0988678901', 'Khoa học dữ liệu & Trực quan hóa dữ liệu'],
+        ['TS. Nguyễn Văn Hùng', 'hungnv@huit.edu.vn', '0903123456', 'Khoa Công nghệ Thông tin', 'Bộ môn Công nghệ phần mềm', 'Công nghệ phần mềm & Lập trình Web PHP/Laravel'],
+        ['ThS. Trần Thị Mai', 'maitt@huit.edu.vn', '0918234567', 'Khoa Công nghệ Thông tin', 'Bộ môn Công nghệ phần mềm', 'Lập trình Web & Di động (React, Flutter, Android)'],
+        ['TS. Lê Hoàng Nam', 'namlh@huit.edu.vn', '0937345678', 'Khoa Công nghệ Thông tin', 'Bộ môn Mạng máy tính & An ninh mạng', 'Mạng máy tính & An toàn thông tin'],
+        ['ThS. Phạm Quốc Bảo', 'baopq@huit.edu.vn', '0948456789', 'Khoa Công nghệ Thông tin', 'Bộ môn Hệ thống thông tin', 'Cơ sở dữ liệu & Phân tích hệ thống'],
+        ['TS. Đặng Thanh Sơn', 'sondt@huit.edu.vn', '0979567890', 'Khoa Công nghệ Thông tin', 'Bộ môn Khoa học dữ liệu & Trí tuệ nhân tạo', 'Trí tuệ nhân tạo & Học máy (AI/ML)'],
+        ['ThS. Vũ Thị Bích', 'bichvt@huit.edu.vn', '0988678901', 'Khoa Công nghệ Thông tin', 'Bộ môn Khoa học dữ liệu & Trí tuệ nhân tạo', 'Khoa học dữ liệu & Trực quan hóa dữ liệu'],
     ];
 
     foreach ($coreTeachers as $t) {
-        $stmtTeacher->execute([$t[0], $t[1], $t[2], $t[3], $defaultTeacherPassword]);
+        $stmtTeacher->execute([$t[0], $t[1], $t[2], $t[3], $t[4], $t[5], $defaultTeacherPassword]);
         $teacherIds[] = $pdo->lastInsertId();
-        $teachersData[] = ['id' => $pdo->lastInsertId(), 'name' => $t[0], 'expertise' => $t[3]];
+        $teachersData[] = ['id' => $pdo->lastInsertId(), 'name' => $t[0], 'expertise' => $t[5]];
     }
 
     // Generate 10 more teachers with Faker
@@ -99,8 +142,12 @@ try {
         $email = strtolower(substr($cleanName, 0, 8)) . rand(10, 99) . '@huit.edu.vn';
         $phone = '09' . $faker->numerify('########');
         $exp = $expertises[array_rand($expertises)];
+        $deptInfo = $departmentsMap[$exp] ?? [
+            'faculty' => 'Khoa Công nghệ Thông tin',
+            'department' => 'Bộ môn Công nghệ phần mềm'
+        ];
 
-        $stmtTeacher->execute([$fullName, $email, $phone, $exp, $defaultTeacherPassword]);
+        $stmtTeacher->execute([$fullName, $email, $phone, $deptInfo['faculty'], $deptInfo['department'], $exp, $defaultTeacherPassword]);
         $tid = $pdo->lastInsertId();
         $teacherIds[] = $tid;
         $teachersData[] = ['id' => $tid, 'name' => $fullName, 'expertise' => $exp];

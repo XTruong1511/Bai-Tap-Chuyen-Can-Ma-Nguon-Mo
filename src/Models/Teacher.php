@@ -49,13 +49,15 @@ class Teacher
             : password_hash('123456', PASSWORD_BCRYPT);
 
         $stmt = $this->db->prepare("
-            INSERT INTO teachers (full_name, email, phone, expertise, password)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO teachers (full_name, email, phone, faculty, department, expertise, password)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             trim($data['full_name']),
             trim($data['email']),
             trim($data['phone']),
+            trim($data['faculty'] ?? 'Khoa Công nghệ Thông tin'),
+            trim($data['department'] ?? 'Bộ môn Công nghệ phần mềm'),
             trim($data['expertise']),
             $password
         ]);
@@ -67,13 +69,15 @@ class Teacher
         if (!empty($data['password'])) {
             $stmt = $this->db->prepare("
                 UPDATE teachers 
-                SET full_name = ?, email = ?, phone = ?, expertise = ?, password = ?
+                SET full_name = ?, email = ?, phone = ?, faculty = ?, department = ?, expertise = ?, password = ?
                 WHERE id = ?
             ");
             return $stmt->execute([
                 trim($data['full_name']),
                 trim($data['email']),
                 trim($data['phone']),
+                trim($data['faculty'] ?? 'Khoa Công nghệ Thông tin'),
+                trim($data['department'] ?? 'Bộ môn Công nghệ phần mềm'),
                 trim($data['expertise']),
                 password_hash($data['password'], PASSWORD_BCRYPT),
                 $id
@@ -81,17 +85,37 @@ class Teacher
         } else {
             $stmt = $this->db->prepare("
                 UPDATE teachers 
-                SET full_name = ?, email = ?, phone = ?, expertise = ?
+                SET full_name = ?, email = ?, phone = ?, faculty = ?, department = ?, expertise = ?
                 WHERE id = ?
             ");
             return $stmt->execute([
                 trim($data['full_name']),
                 trim($data['email']),
                 trim($data['phone']),
+                trim($data['faculty'] ?? 'Khoa Công nghệ Thông tin'),
+                trim($data['department'] ?? 'Bộ môn Công nghệ phần mềm'),
                 trim($data['expertise']),
                 $id
             ]);
         }
+    }
+
+    public function getFacultiesAndDepartments(): array
+    {
+        $sql = "SELECT DISTINCT faculty, department FROM teachers ORDER BY faculty ASC, department ASC";
+        $rows = $this->db->query($sql)->fetchAll();
+        $result = [];
+        foreach ($rows as $r) {
+            $fac = $r['faculty'] ?: 'Khoa Công nghệ Thông tin';
+            $dept = $r['department'] ?: 'Bộ môn Công nghệ phần mềm';
+            if (!isset($result[$fac])) {
+                $result[$fac] = [];
+            }
+            if (!in_array($dept, $result[$fac])) {
+                $result[$fac][] = $dept;
+            }
+        }
+        return $result;
     }
 
     public function delete(int $id): bool

@@ -266,7 +266,7 @@ class Schedule
     {
         // Lấy tất cả giảng viên kèm số lịch đã phân trong tuần
         $sqlTeachers = "
-            SELECT t.id, t.full_name, t.email, t.phone, t.expertise,
+            SELECT t.id, t.full_name, t.email, t.phone, t.faculty, t.department, t.expertise,
                    COUNT(s.id) AS total_weekly_classes
             FROM teachers t
             LEFT JOIN schedules s ON t.id = s.teacher_id
@@ -394,6 +394,8 @@ class Schedule
             $recommendations[] = [
                 'teacher_id' => $tid,
                 'full_name' => $t['full_name'],
+                'faculty' => $t['faculty'] ?? 'Khoa Công nghệ Thông tin',
+                'department' => $t['department'] ?? 'Bộ môn Công nghệ phần mềm',
                 'email' => $t['email'],
                 'phone' => $t['phone'],
                 'expertise' => $t['expertise'],

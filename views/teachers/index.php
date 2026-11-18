@@ -8,7 +8,7 @@ require_once __DIR__ . '/../layouts/header.php';
         <h5 class="fw-bold text-dark mb-0">
             <i class="fa-solid fa-users text-primary me-2"></i>Quản lý Đội ngũ Giảng viên
         </h5>
-        <p class="text-muted small mb-0 mt-1">Danh sách cán bộ giảng viên khoa Công nghệ Thông tin HUIT</p>
+        <p class="text-muted small mb-0 mt-1">Danh sách cán bộ giảng viên phân theo Khoa và Bộ môn tại HUIT</p>
     </div>
     <a href="index.php?controller=teacher&action=create" class="btn-modern-primary">
         <i class="fa-solid fa-user-plus"></i> Thêm giảng viên
@@ -26,6 +26,7 @@ require_once __DIR__ . '/../layouts/header.php';
                 <tr>
                     <th style="width: 50px;" class="text-center">Mã</th>
                     <th>Họ và Tên</th>
+                    <th>Khoa & Bộ môn</th>
                     <th>Email</th>
                     <th>Số điện thoại</th>
                     <th>Chuyên môn chính</th>
@@ -36,7 +37,7 @@ require_once __DIR__ . '/../layouts/header.php';
             <tbody>
                 <?php if (empty($teachers)): ?>
                     <tr>
-                        <td colspan="7" class="text-center py-4 text-muted small">
+                        <td colspan="8" class="text-center py-4 text-muted small">
                             Chưa có dữ liệu giảng viên.
                         </td>
                     </tr>
@@ -53,13 +54,19 @@ require_once __DIR__ . '/../layouts/header.php';
                                 </div>
                             </td>
                             <td>
+                                <div class="fw-semibold text-dark small"><?= htmlspecialchars($t['faculty'] ?? 'Khoa Công nghệ Thông tin') ?></div>
+                                <span class="badge bg-light text-secondary border fw-normal" style="font-size: 0.68rem;">
+                                    <?= htmlspecialchars($t['department'] ?? 'Bộ môn') ?>
+                                </span>
+                            </td>
+                            <td>
                                 <span class="text-muted small"><i class="fa-regular fa-envelope me-1 text-secondary"></i><?= htmlspecialchars($t['email']) ?></span>
                             </td>
                             <td>
                                 <span class="text-muted small"><i class="fa-solid fa-phone me-1 text-secondary"></i><?= htmlspecialchars($t['phone']) ?></span>
                             </td>
                             <td>
-                                <span class="badge bg-light text-dark border text-truncate" style="max-width: 280px;" title="<?= htmlspecialchars($t['expertise']) ?>">
+                                <span class="badge bg-light text-dark border text-truncate" style="max-width: 250px;" title="<?= htmlspecialchars($t['expertise']) ?>">
                                     <i class="fa-solid fa-award me-1 text-warning" style="font-size: 0.65rem;"></i><?= htmlspecialchars($t['expertise']) ?>
                                 </span>
                             </td>
