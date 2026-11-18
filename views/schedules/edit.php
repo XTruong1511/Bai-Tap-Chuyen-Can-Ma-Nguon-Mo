@@ -100,10 +100,10 @@ $initialDept = $currentTeacherObj['department'] ?? ($_POST['department'] ?? '');
                         <div class="row g-2 mb-2">
                             <div class="col-md-6">
                                 <label for="faculty_select" class="form-label small fw-semibold text-muted mb-1">
-                                    <span class="badge bg-secondary-subtle text-secondary me-1">1</span> Chọn Khoa
+                                    <span class="badge bg-primary text-white me-1" id="badge_step_1">1</span> Chọn Khoa
                                 </label>
-                                <select class="form-select form-select-sm" id="faculty_select">
-                                    <option value="">-- Chọn Khoa --</option>
+                                <select class="form-select form-select-sm" id="faculty_select" onchange="handleFacultyChange(this.value)">
+                                    <option value="">-- 1. Chọn Khoa quản lý --</option>
                                     <?php foreach (array_keys($facultiesAndDepartments) as $fac): ?>
                                         <option value="<?= htmlspecialchars($fac) ?>" <?= ($initialFaculty === $fac) ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($fac) ?>
@@ -113,9 +113,9 @@ $initialDept = $currentTeacherObj['department'] ?? ($_POST['department'] ?? '');
                             </div>
                             <div class="col-md-6">
                                 <label for="department_select" class="form-label small fw-semibold text-muted mb-1">
-                                    <span class="badge bg-secondary-subtle text-secondary me-1">2</span> Chọn Bộ môn
+                                    <span class="badge <?= empty($initialFaculty) ? 'bg-secondary-subtle text-secondary' : 'bg-primary text-white' ?> me-1" id="badge_step_2">2</span> Chọn Bộ môn
                                 </label>
-                                <select class="form-select form-select-sm" id="department_select" <?= empty($initialFaculty) ? 'disabled' : '' ?>>
+                                <select class="form-select form-select-sm" id="department_select" onchange="handleDepartmentChange(this.value)" <?= empty($initialFaculty) ? 'disabled' : '' ?>>
                                     <?php if (empty($initialFaculty)): ?>
                                         <option value="">-- Vui lòng chọn Khoa trước --</option>
                                     <?php else: ?>
@@ -133,9 +133,9 @@ $initialDept = $currentTeacherObj['department'] ?? ($_POST['department'] ?? '');
                         <!-- 3. Giảng viên phụ trách (tên sạch, không có đuôi ngoài sau) -->
                         <div>
                             <label for="teacher_id" class="form-label small fw-semibold text-muted mb-1">
-                                <span class="badge bg-primary text-white me-1">3</span> Giảng viên <span class="text-danger">*</span>
+                                <span class="badge <?= empty($initialFaculty) ? 'bg-secondary-subtle text-secondary' : 'bg-primary text-white' ?> me-1" id="badge_step_3">3</span> Giảng viên <span class="text-danger">*</span>
                             </label>
-                            <select class="form-select" id="teacher_id" name="teacher_id" required>
+                            <select class="form-select" id="teacher_id" name="teacher_id" onchange="handleTeacherChange(this.value)" required>
                                 <option value="">-- Chọn Giảng viên --</option>
                                 <?php foreach ($teachers as $t): ?>
                                     <option value="<?= $t['id'] ?>" 
@@ -167,129 +167,239 @@ $initialDept = $currentTeacherObj['department'] ?? ($_POST['department'] ?? '');
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
+// 1. Hierarchy Data
+window.facultyDeptMap = <?= json_encode($facultiesAndDepartments, JSON_UNESCAPED_UNICODE) ?>;
+window.allTeacherOptions = [];
+
+// Helper: Case-insensitive faculty lookup
+function getDeptsForFaculty(facName) {
+    if (!facName) return null;
+    const trimmed = facName.trim();
+    if (window.facultyDeptMap[trimmed]) {
+        return window.facultyDeptMap[trimmed];
+    }
+    const lower = trimmed.toLowerCase();
+    for (const key in window.facultyDeptMap) {
+        if (key.trim().toLowerCase() === lower) {
+            return window.facultyDeptMap[key];
+        }
+    }
+    return null;
+}
+
+// Handler: 1. When Faculty changes (Khoa -> Bộ môn)
+window.handleFacultyChange = function(facultyVal, preselectedDept = '', preselectedTeacher = '') {
     const facultySelect = document.getElementById('faculty_select');
     const departmentSelect = document.getElementById('department_select');
-    const teacherSelect = document.getElementById('teacher_id');
+    const badgeStep1 = document.getElementById('badge_step_1');
+    const badgeStep2 = document.getElementById('badge_step_2');
 
-    const facultyDeptMap = <?= json_encode($facultiesAndDepartments) ?>;
-    const allTeacherOptions = Array.from(teacherSelect.querySelectorAll('option')).filter(opt => opt.value !== "");
+    const cleanFac = (facultyVal || (facultySelect ? facultySelect.value : '') || '').trim();
+    const depts = getDeptsForFaculty(cleanFac);
 
-    // 1. Update Department dropdown strictly based on selected faculty
-    function updateDepartmentOptions(selectedFaculty, preselectedDept = '') {
+    if (facultySelect && facultySelect.value !== cleanFac) {
+        facultySelect.value = cleanFac;
+    }
+
+    if (departmentSelect) {
         departmentSelect.innerHTML = '';
-        if (selectedFaculty && facultyDeptMap[selectedFaculty]) {
+        if (cleanFac && depts && depts.length > 0) {
             departmentSelect.disabled = false;
+            departmentSelect.removeAttribute('disabled');
+
             const defaultOpt = document.createElement('option');
             defaultOpt.value = '';
             defaultOpt.textContent = '-- Tất cả Bộ môn trong Khoa --';
             departmentSelect.appendChild(defaultOpt);
 
-            facultyDeptMap[selectedFaculty].forEach(dept => {
+            depts.forEach(d => {
                 const opt = document.createElement('option');
-                opt.value = dept;
-                opt.textContent = dept;
-                if (preselectedDept && dept === preselectedDept) {
+                opt.value = d;
+                opt.textContent = d;
+                if (preselectedDept && d === preselectedDept) {
                     opt.selected = true;
                 }
                 departmentSelect.appendChild(opt);
             });
+
             if (preselectedDept) {
                 departmentSelect.value = preselectedDept;
             }
+
+            if (badgeStep1) {
+                badgeStep1.className = 'badge bg-success text-white me-1';
+                badgeStep1.innerHTML = '<i class="fa-solid fa-check"></i> 1';
+            }
+            if (badgeStep2) {
+                badgeStep2.className = preselectedDept ? 'badge bg-success text-white me-1' : 'badge bg-primary text-white me-1';
+                badgeStep2.innerHTML = preselectedDept ? '<i class="fa-solid fa-check"></i> 2' : '2';
+            }
         } else {
             departmentSelect.disabled = true;
+            departmentSelect.setAttribute('disabled', 'disabled');
+
             const defaultOpt = document.createElement('option');
             defaultOpt.value = '';
             defaultOpt.textContent = '-- Vui lòng chọn Khoa trước --';
             departmentSelect.appendChild(defaultOpt);
             departmentSelect.value = '';
+
+            if (badgeStep1) {
+                badgeStep1.className = 'badge bg-primary text-white me-1';
+                badgeStep1.textContent = '1';
+            }
+            if (badgeStep2) {
+                badgeStep2.className = 'badge bg-secondary-subtle text-secondary me-1';
+                badgeStep2.textContent = '2';
+            }
         }
     }
 
-    // 2. Filter teacher select based on selected Faculty and Department
-    function filterTeachers() {
-        const selectedFaculty = facultySelect.value;
-        const selectedDept = departmentSelect.value;
-        const currentTeacherVal = teacherSelect.value;
+    // Filter step 3: Teachers
+    handleDepartmentChange(departmentSelect ? departmentSelect.value : '', preselectedTeacher);
+};
 
-        teacherSelect.innerHTML = '';
+// Handler: 2. When Department changes (Bộ môn -> Giảng viên)
+window.handleDepartmentChange = function(deptVal, preselectedTeacher = '') {
+    const facultySelect = document.getElementById('faculty_select');
+    const departmentSelect = document.getElementById('department_select');
+    const teacherSelect = document.getElementById('teacher_id');
+    const badgeStep2 = document.getElementById('badge_step_2');
+    const badgeStep3 = document.getElementById('badge_step_3');
 
-        if (!selectedFaculty) {
-            teacherSelect.innerHTML = '<option value="">-- Vui lòng chọn Khoa ở trên --</option>';
-            allTeacherOptions.forEach(opt => {
-                const clone = opt.cloneNode(true);
-                if (clone.value === currentTeacherVal) clone.selected = true;
-                teacherSelect.appendChild(clone);
-            });
-            return;
-        }
+    if (!teacherSelect) return;
 
+    if (!window.allTeacherOptions || window.allTeacherOptions.length === 0) {
+        window.allTeacherOptions = Array.from(teacherSelect.querySelectorAll('option')).filter(opt => opt.value !== "");
+    }
+
+    const cleanFac = (facultySelect ? facultySelect.value : '').trim();
+    const cleanDept = (deptVal || (departmentSelect ? departmentSelect.value : '') || '').trim();
+    const currentTeacherVal = preselectedTeacher || teacherSelect.value;
+
+    teacherSelect.innerHTML = '';
+
+    if (!cleanFac) {
         const defaultOpt = document.createElement('option');
         defaultOpt.value = '';
-        defaultOpt.textContent = selectedDept ? '-- Chọn Giảng viên thuộc bộ môn này --' : '-- Chọn Giảng viên thuộc khoa này --';
+        defaultOpt.textContent = '-- Vui lòng chọn Khoa ở Bước 1 trước --';
         teacherSelect.appendChild(defaultOpt);
 
-        let matchCount = 0;
-        allTeacherOptions.forEach(opt => {
-            const optFac = opt.getAttribute('data-faculty');
-            const optDept = opt.getAttribute('data-department');
-
-            const matchFac = (optFac === selectedFaculty);
-            const matchDept = !selectedDept || (optDept === selectedDept);
-
-            if (matchFac && matchDept) {
-                matchCount++;
-                const clone = opt.cloneNode(true);
-                if (clone.value === currentTeacherVal) {
-                    clone.selected = true;
-                }
-                teacherSelect.appendChild(clone);
-            }
+        window.allTeacherOptions.forEach(opt => {
+            const clone = opt.cloneNode(true);
+            if (clone.value === currentTeacherVal) clone.selected = true;
+            teacherSelect.appendChild(clone);
         });
 
-        if (matchCount === 0) {
-            defaultOpt.textContent = '-- Chưa có giảng viên thuộc bộ môn này --';
+        if (badgeStep2) {
+            badgeStep2.className = 'badge bg-secondary-subtle text-secondary me-1';
+            badgeStep2.textContent = '2';
         }
+        if (badgeStep3) {
+            badgeStep3.className = 'badge bg-secondary-subtle text-secondary me-1';
+            badgeStep3.textContent = '3';
+        }
+        return;
     }
 
-    // 3. When Faculty changes
-    facultySelect.addEventListener('change', function () {
-        const selectedFaculty = this.value;
-        updateDepartmentOptions(selectedFaculty);
-        filterTeachers();
-    });
+    if (badgeStep2) {
+        badgeStep2.className = cleanDept ? 'badge bg-success text-white me-1' : 'badge bg-primary text-white me-1';
+        badgeStep2.innerHTML = cleanDept ? '<i class="fa-solid fa-check"></i> 2' : '2';
+    }
 
-    // 4. When Department changes
-    departmentSelect.addEventListener('change', function () {
-        filterTeachers();
-    });
+    const defaultOpt = document.createElement('option');
+    defaultOpt.value = '';
+    defaultOpt.textContent = cleanDept 
+        ? `-- Chọn Giảng viên thuộc: ${cleanDept} --`
+        : `-- Chọn Giảng viên thuộc: ${cleanFac} --`;
+    teacherSelect.appendChild(defaultOpt);
 
-    // 5. When Teacher changes directly
-    teacherSelect.addEventListener('change', function () {
-        const selectedOpt = this.options[this.selectedIndex];
-        if (selectedOpt && selectedOpt.value) {
-            const fac = selectedOpt.getAttribute('data-faculty');
-            const dept = selectedOpt.getAttribute('data-department');
-            if (fac && facultySelect.value !== fac) {
-                facultySelect.value = fac;
-                updateDepartmentOptions(fac, dept);
-            } else if (dept && departmentSelect.value !== dept) {
-                departmentSelect.value = dept;
+    let matchCount = 0;
+    window.allTeacherOptions.forEach(opt => {
+        const optFac = (opt.getAttribute('data-faculty') || '').trim();
+        const optDept = (opt.getAttribute('data-department') || '').trim();
+
+        const matchFac = (optFac.toLowerCase() === cleanFac.toLowerCase());
+        const matchDept = !cleanDept || (optDept.toLowerCase() === cleanDept.toLowerCase());
+
+        if (matchFac && matchDept) {
+            matchCount++;
+            const clone = opt.cloneNode(true);
+            if (clone.value === currentTeacherVal) {
+                clone.selected = true;
             }
+            teacherSelect.appendChild(clone);
         }
     });
 
-    // Initial sync with schedule's current teacher
-    if (facultySelect.value) {
-        updateDepartmentOptions(facultySelect.value, "<?= htmlspecialchars($initialDept) ?>");
-        filterTeachers();
-        teacherSelect.value = "<?= $targetTeacherId ?>";
-    } else {
-        updateDepartmentOptions('');
-        filterTeachers();
+    if (matchCount === 0) {
+        defaultOpt.textContent = '-- Chưa có giảng viên thuộc bộ môn này --';
     }
-});
+
+    if (badgeStep3) {
+        badgeStep3.className = teacherSelect.value ? 'badge bg-success text-white me-1' : 'badge bg-primary text-white me-1';
+        badgeStep3.innerHTML = teacherSelect.value ? '<i class="fa-solid fa-check"></i> 3' : '3';
+    }
+};
+
+// Handler: 3. When Teacher changes directly
+window.handleTeacherChange = function(teacherVal) {
+    const teacherSelect = document.getElementById('teacher_id');
+    const facultySelect = document.getElementById('faculty_select');
+    const departmentSelect = document.getElementById('department_select');
+    const badgeStep3 = document.getElementById('badge_step_3');
+
+    if (!teacherSelect) return;
+    const selectedOpt = teacherSelect.options[teacherSelect.selectedIndex];
+
+    if (selectedOpt && selectedOpt.value) {
+        const fac = (selectedOpt.getAttribute('data-faculty') || '').trim();
+        const dept = (selectedOpt.getAttribute('data-department') || '').trim();
+
+        if (fac && facultySelect && facultySelect.value !== fac) {
+            handleFacultyChange(fac, dept, selectedOpt.value);
+        } else if (dept && departmentSelect && departmentSelect.value !== dept) {
+            departmentSelect.value = dept;
+            handleDepartmentChange(dept, selectedOpt.value);
+        }
+
+        if (badgeStep3) {
+            badgeStep3.className = 'badge bg-success text-white me-1';
+            badgeStep3.innerHTML = '<i class="fa-solid fa-check"></i> 3';
+        }
+    } else {
+        if (badgeStep3) {
+            badgeStep3.className = 'badge bg-primary text-white me-1';
+            badgeStep3.textContent = '3';
+        }
+    }
+};
+
+function initEditScheduleForm() {
+    const facultySelect = document.getElementById('faculty_select');
+    const departmentSelect = document.getElementById('department_select');
+    const teacherSelect = document.getElementById('teacher_id');
+
+    if (teacherSelect && (!window.allTeacherOptions || window.allTeacherOptions.length === 0)) {
+        window.allTeacherOptions = Array.from(teacherSelect.querySelectorAll('option')).filter(opt => opt.value !== "");
+    }
+
+    const initialFac = "<?= htmlspecialchars($initialFaculty) ?>";
+    const initialDep = "<?= htmlspecialchars($initialDept) ?>";
+    const targetTeacher = "<?= $targetTeacherId ?>";
+
+    if (initialFac) {
+        handleFacultyChange(initialFac, initialDep, targetTeacher);
+    } else {
+        handleFacultyChange('');
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEditScheduleForm);
+} else {
+    initEditScheduleForm();
+}
 </script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>
