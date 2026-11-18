@@ -8,7 +8,7 @@
             <strong class="text-dark">HUIT Schedule Hub</strong> &copy; <?= date('Y') ?> • Đại học Công Thương TP.HCM
         </div>
         <div class="d-flex align-items-center gap-3">
-            <span>v1.0</span>
+            <span>v2.0</span>
             <span>MIT License</span>
             <a href="README.md" target="_blank" class="text-decoration-none text-muted">Tài liệu</a>
         </div>

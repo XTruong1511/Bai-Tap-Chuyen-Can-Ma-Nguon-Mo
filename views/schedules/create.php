@@ -13,7 +13,7 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
     <h4 class="fw-bold text-dark mb-0">
         <i class="fa-solid fa-calendar-plus text-primary me-2"></i>Thêm Lịch Giảng Dạy
     </h4>
-    <a href="index.php?controller=schedule&action=index" class="btn btn-outline-secondary btn-sm text-nowrap">
+    <a href="index.php?controller=schedule&action=index" class="btn-modern-outline">
         <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
 </div>
@@ -35,7 +35,7 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
         <div class="card card-custom">
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <span><i class="fa-solid fa-pen-to-square me-2 text-primary"></i>Thông tin Phân lịch Lớp học</span>
-                <span class="badge bg-primary text-white">Bước 1: Nhập thông tin</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-medium">Bước 1: Nhập thông tin</span>
             </div>
             <div class="card-body p-4">
                 <form method="POST" action="index.php?controller=schedule&action=create" id="scheduleForm">

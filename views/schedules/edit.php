@@ -8,7 +8,7 @@ use App\Models\Schedule;
     <h4 class="fw-bold text-dark mb-0">
         <i class="fa-solid fa-pen-to-square text-primary me-2"></i>Chỉnh sửa Lịch #<?= $schedule['id'] ?>
     </h4>
-    <a href="index.php?controller=schedule&action=index" class="btn btn-outline-secondary btn-sm text-nowrap">
+    <a href="index.php?controller=schedule&action=index" class="btn-modern-outline">
         <i class="fa-solid fa-arrow-left me-1"></i> Quay lại
     </a>
 </div>

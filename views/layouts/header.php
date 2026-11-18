@@ -15,7 +15,7 @@ $flash = Auth::getFlash();
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Bootstrap 5.3.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome 6 -->
@@ -33,6 +33,7 @@ $flash = Auth::getFlash();
             --accent-hover: #ea580c;
             --bg-page: #f8fafc;
             --border-color: #e2e8f0;
+            --border-subtle: #f1f5f9;
             --text-dark: #0f172a;
             --text-muted: #64748b;
         }
@@ -44,41 +45,43 @@ $flash = Auth::getFlash();
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            letter-spacing: -0.01em;
+            letter-spacing: -0.015em;
             font-size: 0.875rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .main-wrapper {
             flex: 1;
         }
 
-        /* Modern Light Topbar */
-        .topbar-clean {
-            background-color: #ffffff;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.8rem;
-            padding: 0.4rem 0;
-        }
-
-        /* Modern Navbar */
+        /* Modern Glassmorphic Navbar */
         .navbar-modern {
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
-            padding: 0.6rem 0;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            padding: 0.65rem 0;
+            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03);
+            transition: all 0.2s ease;
         }
 
         .brand-logo-box {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .navbar-brand:hover .brand-logo-box {
+            transform: scale(1.05);
         }
 
         .navbar-brand {
@@ -95,8 +98,8 @@ $flash = Auth::getFlash();
             color: #475569 !important;
             font-weight: 500;
             font-size: 0.85rem;
-            padding: 0.45rem 0.75rem !important;
-            border-radius: 7px;
+            padding: 0.45rem 0.8rem !important;
+            border-radius: 8px;
             transition: all 0.15s ease;
             text-decoration: none;
             display: inline-flex;
@@ -118,26 +121,56 @@ $flash = Auth::getFlash();
         /* Modern Cards */
         .card-custom {
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
             background-color: #ffffff;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-header-custom {
             background-color: #ffffff;
             border-bottom: 1px solid var(--border-color);
-            padding: 0.75rem 1rem;
+            padding: 0.85rem 1.15rem;
             font-weight: 600;
             font-size: 0.875rem;
             color: #1e293b;
         }
 
+        /* Modern KPI Cards */
+        .kpi-card {
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.1rem 1.25rem;
+            box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1;
+        }
+
+        .kpi-icon-box {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
         /* Modern Form Controls */
         .form-control, .form-select {
-            border-radius: 7px;
+            border-radius: 8px;
             border: 1px solid #cbd5e1;
             font-size: 0.85rem;
-            padding: 0.45rem 0.75rem;
+            padding: 0.48rem 0.8rem;
             transition: border-color 0.15s ease, box-shadow 0.15s ease;
         }
 
@@ -146,25 +179,26 @@ $flash = Auth::getFlash();
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
         }
 
-        /* Buttons */
+        /* Modern Buttons */
         .btn-modern-primary {
             background-color: var(--primary);
             color: #ffffff;
             border: none;
             font-weight: 500;
-            border-radius: 7px;
-            padding: 0.45rem 0.9rem;
+            border-radius: 8px;
+            padding: 0.45rem 0.95rem;
             font-size: 0.85rem;
             transition: all 0.15s ease;
             display: inline-flex;
             align-items: center;
             gap: 6px;
+            text-decoration: none;
         }
 
         .btn-modern-primary:hover {
             background-color: var(--primary-hover);
             color: #ffffff;
-            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.28);
         }
 
         .btn-modern-outline {
@@ -172,13 +206,14 @@ $flash = Auth::getFlash();
             color: #334155;
             border: 1px solid var(--border-color);
             font-weight: 500;
-            border-radius: 7px;
-            padding: 0.45rem 0.85rem;
+            border-radius: 8px;
+            padding: 0.45rem 0.9rem;
             font-size: 0.85rem;
             transition: all 0.15s ease;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            text-decoration: none;
         }
 
         .btn-modern-outline:hover {
@@ -187,23 +222,20 @@ $flash = Auth::getFlash();
             border-color: #cbd5e1;
         }
 
-        .btn-modern-accent {
-            background-color: var(--accent);
-            color: #ffffff;
-            border: none;
-            font-weight: 500;
-            border-radius: 7px;
-            padding: 0.45rem 0.9rem;
-            font-size: 0.85rem;
-            transition: all 0.15s ease;
+        /* Teacher Avatar circles */
+        .teacher-avatar-sm {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: #2563eb;
+            border: 1px solid #bfdbfe;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-        }
-
-        .btn-modern-accent:hover {
-            background-color: var(--accent-hover);
-            color: #ffffff;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.7rem;
+            flex-shrink: 0;
         }
 
         /* Modern Pastel Branch Badges */
@@ -212,8 +244,10 @@ $flash = Auth::getFlash();
             color: #1d4ed8 !important;
             border: 1px solid #bfdbfe !important;
             font-weight: 500;
-            border-radius: 6px;
-            padding: 3px 7px;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
         }
 
         .badge-branch-2 {
@@ -221,8 +255,10 @@ $flash = Auth::getFlash();
             color: #c2410c !important;
             border: 1px solid #fed7aa !important;
             font-weight: 500;
-            border-radius: 6px;
-            padding: 3px 7px;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
         }
 
         .badge-branch-3 {
@@ -230,8 +266,10 @@ $flash = Auth::getFlash();
             color: #7e22ce !important;
             border: 1px solid #e9d5ff !important;
             font-weight: 500;
-            border-radius: 6px;
-            padding: 3px 7px;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
         }
 
         .badge-branch-4 {
@@ -239,11 +277,49 @@ $flash = Auth::getFlash();
             color: #15803d !important;
             border: 1px solid #bbf7d0 !important;
             font-weight: 500;
-            border-radius: 6px;
-            padding: 3px 7px;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.72rem;
+            display: inline-block;
         }
 
-        /* Table Styling */
+        /* Modern Linear Segmented Control for Campus Tabs */
+        .campus-segmented-control {
+            background-color: #f1f5f9;
+            padding: 4px;
+            border-radius: 11px;
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .campus-segment-item {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #64748b;
+            padding: 6px 13px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .campus-segment-item:hover {
+            color: #0f172a;
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+
+        .campus-segment-item.active {
+            color: #0f172a;
+            background-color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+        }
+
+        /* Modern Table Styling */
         .table-modern {
             margin-bottom: 0;
             font-size: 0.84rem;
@@ -255,15 +331,15 @@ $flash = Auth::getFlash();
             font-size: 0.72rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.05em;
             border-bottom: 1px solid var(--border-color);
-            padding: 0.65rem 0.85rem;
+            padding: 0.75rem 1rem;
             white-space: nowrap !important;
             vertical-align: middle !important;
         }
 
         .table-modern tbody td {
-            padding: 0.65rem 0.85rem;
+            padding: 0.75rem 1rem;
             white-space: nowrap !important;
             vertical-align: middle !important;
             border-bottom: 1px solid #f1f5f9;
@@ -273,69 +349,14 @@ $flash = Auth::getFlash();
             background-color: #f8fafc;
         }
 
-        /* Timetable Matrix Grid */
-        .table-matrix-modern thead th {
-            background-color: #f1f5f9;
-            color: #334155;
-            font-weight: 600;
-            font-size: 0.78rem;
-            border: 1px solid var(--border-color);
-            text-align: center;
-            padding: 0.6rem 0.4rem;
-        }
-
-        .table-matrix-modern td {
-            border: 1px solid var(--border-color);
-            vertical-align: middle !important;
-            padding: 4px !important;
-        }
-
-        .matrix-cell {
-            min-height: 65px;
-            height: 65px;
-        }
-
-        .schedule-card-modern {
-            border-radius: 6px;
-            padding: 4px 6px;
-            text-align: left;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            transition: transform 0.15s ease;
-        }
-
-        .schedule-card-modern:hover {
-            transform: translateY(-1px);
-        }
-
-        .empty-slot-btn {
-            font-size: 0.73rem;
-            color: #94a3b8;
-            border: 1px dashed #cbd5e1;
-            border-radius: 6px;
-            padding: 3px 6px;
-            width: 100%;
-            display: inline-block;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: all 0.15s ease;
-        }
-
-        .empty-slot-btn:hover {
-            background-color: #eff6ff;
-            color: #2563eb;
-            border-color: #93c5fd;
-        }
-
-        /* Spacious Timetable Matrix */
+        /* Modern Spacious Timetable Matrix */
         .table-matrix-spacious {
             min-width: 1250px;
             table-layout: fixed;
             background-color: #ffffff;
             margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
         }
 
         .table-matrix-spacious thead th {
@@ -343,135 +364,111 @@ $flash = Auth::getFlash();
             color: #334155;
             font-weight: 600;
             font-size: 0.82rem;
-            border: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
             text-align: center;
-            padding: 0.75rem 0.5rem;
+            padding: 0.85rem 0.5rem;
+        }
+
+        .table-matrix-spacious thead th:last-child {
+            border-right: none;
         }
 
         .table-matrix-spacious td {
-            border: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
             vertical-align: top !important;
             padding: 8px !important;
             background-color: #ffffff;
         }
 
-        .matrix-cell-spacious {
-            min-height: 80px;
+        .table-matrix-spacious td:last-child {
+            border-right: none;
         }
 
-        /* Spacious Schedule Card */
-        .schedule-card-spacious {
-            background-color: #ffffff;
-            border-radius: 8px;
-            padding: 7px 10px;
-            margin-bottom: 6px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        .matrix-cell-spacious {
+            min-height: 85px;
+        }
+
+        .matrix-card {
+            background: #ffffff;
             border: 1px solid #e2e8f0;
-            border-left: 3px solid #3b82f6;
-            transition: all 0.15s ease;
+            border-radius: 9px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             text-align: left;
         }
 
-        .schedule-card-spacious:hover {
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
-            transform: translateY(-1px);
+        .matrix-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px -2px rgba(15, 23, 42, 0.08);
+            border-color: #cbd5e1;
         }
 
-        .schedule-card-spacious.card-branch-1 {
-            border-left-color: #2563eb;
+        .matrix-card-cs1 { 
+            border-left: 3.5px solid #2563eb !important; 
             background: linear-gradient(to right, #f8faff 0%, #ffffff 40%);
         }
-
-        .schedule-card-spacious.card-branch-2 {
-            border-left-color: #f97316;
+        .matrix-card-cs2 { 
+            border-left: 3.5px solid #f97316 !important; 
             background: linear-gradient(to right, #fffaf5 0%, #ffffff 40%);
         }
-
-        .schedule-card-spacious.card-branch-3 {
-            border-left-color: #9333ea;
+        .matrix-card-cs3 { 
+            border-left: 3.5px solid #9333ea !important; 
             background: linear-gradient(to right, #faf5ff 0%, #ffffff 40%);
         }
-
-        .schedule-card-spacious.card-branch-4 {
-            border-left-color: #16a34a;
+        .matrix-card-cs4 { 
+            border-left: 3.5px solid #16a34a !important; 
             background: linear-gradient(to right, #f7fdf9 0%, #ffffff 40%);
         }
 
-        .empty-slot-spacious {
-            min-height: 48px;
+        .matrix-empty-slot {
+            min-height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px dashed #cbd5e1;
-            border-radius: 8px;
+            border: 1.5px dashed #e2e8f0;
+            border-radius: 9px;
             color: #94a3b8;
-            font-size: 0.76rem;
+            font-size: 0.78rem;
+            font-weight: 500;
             text-decoration: none;
-            transition: all 0.15s ease;
+            transition: all 0.2s ease;
             background-color: #fafbfc;
         }
 
-        .empty-slot-spacious:hover {
+        .matrix-empty-slot:hover {
+            border-color: #93c5fd;
             background-color: #eff6ff;
             color: #2563eb;
-            border-color: #93c5fd;
+            transform: translateY(-1px);
         }
 
-        /* Branch Filter Tabs */
-        .nav-tabs-branch {
-            border-bottom: 1px solid #e2e8f0;
-            gap: 4px;
-        }
-
-        .nav-tabs-branch .nav-link-tab {
-            color: #64748b;
-            font-size: 0.83rem;
-            font-weight: 500;
-            padding: 0.45rem 0.9rem;
-            border-radius: 8px 8px 0 0;
-            text-decoration: none;
-            border: 1px solid transparent;
-            transition: all 0.15s ease;
-            background-color: transparent;
-        }
-
-        .nav-tabs-branch .nav-link-tab:hover {
-            color: #0f172a;
-            background-color: #f1f5f9;
-        }
-
-        .nav-tabs-branch .nav-link-tab.active {
-            color: #2563eb;
-            background-color: #ffffff;
-            border-color: #e2e8f0 #e2e8f0 #ffffff;
-            font-weight: 600;
+        .hover-text-primary:hover {
+            color: var(--primary) !important;
         }
 
         @media print {
-            .no-print {
-                display: none !important;
-            }
-            body {
-                background: white !important;
-            }
-            .card-custom {
-                box-shadow: none !important;
-                border: 1px solid #ccc !important;
-            }
+            .no-print { display: none !important; }
+            body { background: white !important; }
+            .card-custom { box-shadow: none !important; border: 1px solid #ccc !important; }
         }
     </style>
 </head>
 <body>
 
-<!-- Modern Navbar -->
+<!-- Modern Minimal Navbar -->
 <nav class="navbar navbar-expand-lg navbar-modern sticky-top no-print">
     <div class="container">
         <a class="navbar-brand text-nowrap py-0" href="index.php">
             <div class="brand-logo-box">
                 <i class="fa-solid fa-graduation-cap"></i>
             </div>
-            <div>
+            <div class="d-flex align-items-center gap-2">
                 <span class="fw-bold text-dark">HUIT Schedule Hub</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle d-none d-sm-inline-block fw-semibold" style="font-size: 0.65rem; padding: 2px 6px;">v2.0</span>
             </div>
         </a>
 
@@ -519,8 +516,8 @@ $flash = Auth::getFlash();
             <ul class="navbar-nav align-items-lg-center">
                 <?php if (Auth::check()): ?>
                     <li class="nav-item dropdown">
-                        <a class="d-flex align-items-center gap-2 text-decoration-none dropdown-toggle py-1 px-2 rounded hover-bg-light" href="#" role="button" data-bs-toggle="dropdown">
-                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 0.75rem;">
+                        <a class="d-flex align-items-center gap-2 text-decoration-none dropdown-toggle py-1 px-2 rounded" href="#" role="button" data-bs-toggle="dropdown">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 30px; height: 30px; font-size: 0.78rem;">
                                 <?= mb_substr($currentUser['full_name'] ?? 'U', 0, 1, 'UTF-8') ?>
                             </div>
                             <div class="text-start text-nowrap">
