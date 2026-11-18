@@ -7,6 +7,19 @@ $defaultDay = $_GET['day'] ?? 'Thứ 2';
 $defaultShift = $_GET['shift'] ?? 'Sáng (Tiết 1-3)';
 $defaultBranch = (int)($_GET['branch_id'] ?? 1);
 $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
+
+$selectedTeacherObj = null;
+$targetTeacherId = (int)($_POST['teacher_id'] ?? $defaultTeacher ?? 0);
+if ($targetTeacherId > 0) {
+    foreach ($teachers as $t) {
+        if ($t['id'] == $targetTeacherId) {
+            $selectedTeacherObj = $t;
+            break;
+        }
+    }
+}
+$initialFaculty = $selectedTeacherObj['faculty'] ?? ($_POST['faculty'] ?? '');
+$initialDept = $selectedTeacherObj['department'] ?? ($_POST['department'] ?? '');
 ?>
 
 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -122,9 +135,11 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
                                     <span class="badge bg-secondary-subtle text-secondary me-1">1</span> Chọn Khoa
                                 </label>
                                 <select class="form-select form-select-sm" id="faculty_select">
-                                    <option value="">-- Tất cả Khoa --</option>
+                                    <option value="">-- Chọn Khoa --</option>
                                     <?php foreach (array_keys($facultiesAndDepartments) as $fac): ?>
-                                        <option value="<?= htmlspecialchars($fac) ?>"><?= htmlspecialchars($fac) ?></option>
+                                        <option value="<?= htmlspecialchars($fac) ?>" <?= ($initialFaculty === $fac) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($fac) ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -132,20 +147,17 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
                                 <label for="department_select" class="form-label small fw-semibold text-muted mb-1">
                                     <span class="badge bg-secondary-subtle text-secondary me-1">2</span> Chọn Bộ môn
                                 </label>
-                                <select class="form-select form-select-sm" id="department_select">
-                                    <option value="">-- Tất cả Bộ môn --</option>
-                                    <?php 
-                                        $allDepts = [];
-                                        foreach ($facultiesAndDepartments as $fac => $depts) {
-                                            foreach ($depts as $d) {
-                                                if (!in_array($d, $allDepts)) $allDepts[] = $d;
-                                            }
-                                        }
-                                        sort($allDepts);
-                                        foreach ($allDepts as $dept):
-                                    ?>
-                                        <option value="<?= htmlspecialchars($dept) ?>"><?= htmlspecialchars($dept) ?></option>
-                                    <?php endforeach; ?>
+                                <select class="form-select form-select-sm" id="department_select" <?= empty($initialFaculty) ? 'disabled' : '' ?>>
+                                    <?php if (empty($initialFaculty)): ?>
+                                        <option value="">-- Vui lòng chọn Khoa trước --</option>
+                                    <?php else: ?>
+                                        <option value="">-- Tất cả Bộ môn trong Khoa --</option>
+                                        <?php foreach ($facultiesAndDepartments[$initialFaculty] ?? [] as $dept): ?>
+                                            <option value="<?= htmlspecialchars($dept) ?>" <?= ($initialDept === $dept) ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($dept) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
                                 </select>
                             </div>
                         </div>
@@ -254,54 +266,72 @@ document.addEventListener('DOMContentLoaded', function () {
     // Cache all original teacher options
     const allTeacherOptions = Array.from(teacherSelect.querySelectorAll('option')).filter(opt => opt.value !== "");
 
-    // 1. When Faculty changes
-    facultySelect.addEventListener('change', function () {
-        const selectedFaculty = this.value;
-
-        // Repopulate department dropdown
-        departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
+    // 1. Update Department dropdown strictly based on selected faculty
+    function updateDepartmentOptions(selectedFaculty, preselectedDept = '') {
+        departmentSelect.innerHTML = '';
         if (selectedFaculty && facultyDeptMap[selectedFaculty]) {
+            departmentSelect.disabled = false;
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = '-- Tất cả Bộ môn trong Khoa --';
+            departmentSelect.appendChild(defaultOpt);
+
             facultyDeptMap[selectedFaculty].forEach(dept => {
                 const opt = document.createElement('option');
                 opt.value = dept;
                 opt.textContent = dept;
+                if (preselectedDept && dept === preselectedDept) {
+                    opt.selected = true;
+                }
                 departmentSelect.appendChild(opt);
             });
+            if (preselectedDept) {
+                departmentSelect.value = preselectedDept;
+            }
         } else {
-            const allUniqueDepts = new Set();
-            Object.values(facultyDeptMap).forEach(depts => depts.forEach(d => allUniqueDepts.add(d)));
-            Array.from(allUniqueDepts).sort().forEach(dept => {
-                const opt = document.createElement('option');
-                opt.value = dept;
-                opt.textContent = dept;
-                departmentSelect.appendChild(opt);
-            });
+            departmentSelect.disabled = true;
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = '-- Vui lòng chọn Khoa trước --';
+            departmentSelect.appendChild(defaultOpt);
+            departmentSelect.value = '';
         }
+    }
 
-        filterTeachers();
-    });
-
-    // 2. When Department changes
-    departmentSelect.addEventListener('change', function () {
-        filterTeachers();
-    });
-
-    // Filter teacher select based on selected Faculty and Department
+    // 2. Filter teacher select based on selected Faculty and Department
     function filterTeachers() {
         const selectedFaculty = facultySelect.value;
         const selectedDept = departmentSelect.value;
         const currentTeacherVal = teacherSelect.value;
 
-        teacherSelect.innerHTML = '<option value="">-- Chọn Giảng viên --</option>';
+        teacherSelect.innerHTML = '';
 
+        if (!selectedFaculty) {
+            teacherSelect.innerHTML = '<option value="">-- Vui lòng chọn Khoa ở trên --</option>';
+            allTeacherOptions.forEach(opt => {
+                const clone = opt.cloneNode(true);
+                if (clone.value === currentTeacherVal) clone.selected = true;
+                teacherSelect.appendChild(clone);
+            });
+            checkLiveConflict();
+            return;
+        }
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = selectedDept ? '-- Chọn Giảng viên thuộc bộ môn này --' : '-- Chọn Giảng viên thuộc khoa này --';
+        teacherSelect.appendChild(defaultOpt);
+
+        let matchCount = 0;
         allTeacherOptions.forEach(opt => {
             const optFac = opt.getAttribute('data-faculty');
             const optDept = opt.getAttribute('data-department');
 
-            const matchFac = !selectedFaculty || optFac === selectedFaculty;
-            const matchDept = !selectedDept || optDept === selectedDept;
+            const matchFac = (optFac === selectedFaculty);
+            const matchDept = !selectedDept || (optDept === selectedDept);
 
             if (matchFac && matchDept) {
+                matchCount++;
                 const clone = opt.cloneNode(true);
                 if (clone.value === currentTeacherVal) {
                     clone.selected = true;
@@ -310,10 +340,26 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        if (matchCount === 0) {
+            defaultOpt.textContent = '-- Chưa có giảng viên thuộc bộ môn này --';
+        }
+
         checkLiveConflict();
     }
 
-    // 3. When Teacher changes directly
+    // 3. When Faculty changes
+    facultySelect.addEventListener('change', function () {
+        const selectedFaculty = this.value;
+        updateDepartmentOptions(selectedFaculty);
+        filterTeachers();
+    });
+
+    // 4. When Department changes
+    departmentSelect.addEventListener('change', function () {
+        filterTeachers();
+    });
+
+    // 5. When Teacher changes directly
     teacherSelect.addEventListener('change', function () {
         const selectedOpt = this.options[this.selectedIndex];
         if (selectedOpt && selectedOpt.value) {
@@ -321,16 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const dept = selectedOpt.getAttribute('data-department');
             if (fac && facultySelect.value !== fac) {
                 facultySelect.value = fac;
-                departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
-                if (facultyDeptMap[fac]) {
-                    facultyDeptMap[fac].forEach(d => {
-                        const opt = document.createElement('option');
-                        opt.value = d;
-                        opt.textContent = d;
-                        if (d === dept) opt.selected = true;
-                        departmentSelect.appendChild(opt);
-                    });
-                }
+                updateDepartmentOptions(fac, dept);
             } else if (dept && departmentSelect.value !== dept) {
                 departmentSelect.value = dept;
             }
@@ -338,27 +375,16 @@ document.addEventListener('DOMContentLoaded', function () {
         checkLiveConflict();
     });
 
-    // Initial check: if teacher preselected, sync Khoa and Bộ môn
-    if (teacherSelect.value) {
-        const selectedOpt = teacherSelect.querySelector(`option[value="${teacherSelect.value}"]`);
-        if (selectedOpt) {
-            const fac = selectedOpt.getAttribute('data-faculty');
-            const dept = selectedOpt.getAttribute('data-department');
-            if (fac) facultySelect.value = fac;
-            if (dept) {
-                departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
-                if (facultyDeptMap[fac]) {
-                    facultyDeptMap[fac].forEach(d => {
-                        const opt = document.createElement('option');
-                        opt.value = d;
-                        opt.textContent = d;
-                        if (d === dept) opt.selected = true;
-                        departmentSelect.appendChild(opt);
-                    });
-                }
-                departmentSelect.value = dept;
-            }
+    // Initial check: sync Khoa and Bộ môn on page load
+    if (facultySelect.value) {
+        updateDepartmentOptions(facultySelect.value, "<?= htmlspecialchars($initialDept) ?>");
+        filterTeachers();
+        if ("<?= $targetTeacherId ?>" !== "0") {
+            teacherSelect.value = "<?= $targetTeacherId ?>";
         }
+    } else {
+        updateDepartmentOptions('');
+        filterTeachers();
     }
 
     let debounceTimer = null;
@@ -529,19 +555,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.selectTeacher = function(id, name, faculty, department) {
-        if (faculty) facultySelect.value = faculty;
-        if (department) {
-            departmentSelect.innerHTML = '<option value="">-- Tất cả Bộ môn --</option>';
-            if (facultyDeptMap[faculty]) {
-                facultyDeptMap[faculty].forEach(d => {
-                    const opt = document.createElement('option');
-                    opt.value = d;
-                    opt.textContent = d;
-                    if (d === department) opt.selected = true;
-                    departmentSelect.appendChild(opt);
-                });
-            }
-            departmentSelect.value = department;
+        if (faculty) {
+            facultySelect.value = faculty;
+            updateDepartmentOptions(faculty, department);
         }
         filterTeachers();
         teacherSelect.value = id;
@@ -551,6 +567,7 @@ document.addEventListener('DOMContentLoaded', function () {
             position: 'top-end',
             icon: 'success',
             title: `Đã chọn: ${name}`,
+            text: `${faculty} - ${department}`,
             showConfirmButton: false,
             timer: 2000
         });
