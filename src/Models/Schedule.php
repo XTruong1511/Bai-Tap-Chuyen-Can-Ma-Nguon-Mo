@@ -460,7 +460,7 @@ class Schedule
 
         // 2. Phân bổ theo cơ sở (Branch distribution)
         $branchStats = $this->db->query("
-            SELECT b.id, b.branch_name, COUNT(s.id) AS count
+            SELECT b.id, b.id AS branch_id, b.branch_name, COUNT(s.id) AS count
             FROM branches b
             LEFT JOIN schedules s ON b.id = s.branch_id
             GROUP BY b.id

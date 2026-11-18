@@ -139,7 +139,10 @@ require_once __DIR__ . '/../layouts/header.php';
                             $dotColors = [1 => '#2563eb', 2 => '#f97316', 3 => '#9333ea', 4 => '#16a34a'];
                         ?>
                         <?php foreach ($stats['branch_stats'] as $bs): ?>
-                            <?php $dotColor = $dotColors[$bs['branch_id']] ?? '#64748b'; ?>
+                            <?php 
+                                $bId = (int)($bs['branch_id'] ?? $bs['id'] ?? 1);
+                                $dotColor = $dotColors[$bId] ?? '#64748b'; 
+                            ?>
                             <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-1 border-0 text-nowrap">
                                 <span class="text-truncate d-flex align-items-center" style="max-width: 220px;">
                                     <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:<?= $dotColor ?>; margin-right:6px;"></span>
