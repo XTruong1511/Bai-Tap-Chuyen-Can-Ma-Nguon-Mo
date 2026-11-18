@@ -1,0 +1,22 @@
+{
+    "name": "huit/schedule-hub",
+    "description": "HUIT Schedule Hub - Hệ thống quản lý và phân lịch giảng dạy đa cơ sở thông minh",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "HUIT Dev",
+            "email": "dev@huit.edu.vn"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "vlucas/phpdotenv": "^5.8",
+        "fakerphp/faker": "^1.24"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}
