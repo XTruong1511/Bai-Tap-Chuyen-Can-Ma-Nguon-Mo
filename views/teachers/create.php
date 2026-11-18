@@ -66,9 +66,9 @@ require_once __DIR__ . '/../layouts/header.php';
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="index.php?controller=teacher&action=index" class="btn btn-light px-3">Hủy bỏ</a>
-                        <button type="submit" class="btn btn-primary px-4 fw-bold">
-                            <i class="fa-solid fa-check me-1"></i> Lưu thông tin
+                        <a href="index.php?controller=teacher&action=index" class="btn-modern-outline">Hủy bỏ</a>
+                        <button type="submit" class="btn-modern-primary">
+                            <i class="fa-solid fa-check"></i> Lưu thông tin
                         </button>
                     </div>
                 </form>

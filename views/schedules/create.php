@@ -110,8 +110,8 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
                             <label for="teacher_id" class="form-label fw-bold mb-0">
                                 Giảng viên phụ trách <span class="text-danger">*</span>
                             </label>
-                            <button type="button" class="btn btn-outline-primary btn-sm py-0" id="btnTriggerRecommend">
-                                <i class="fa-solid fa-wand-magic-sparkles me-1 text-warning"></i> Gợi ý tự động
+                            <button type="button" class="btn-modern-outline py-0 px-2" id="btnTriggerRecommend">
+                                <i class="fa-solid fa-wand-magic-sparkles text-primary me-1"></i> Gợi ý
                             </button>
                         </div>
                         <select class="form-select" id="teacher_id" name="teacher_id" required>
@@ -136,9 +136,9 @@ $defaultTeacher = (int)($_GET['teacher_id'] ?? 0);
 
                     <!-- Buttons -->
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="index.php?controller=schedule&action=index" class="btn btn-light px-3">Hủy bỏ</a>
-                        <button type="submit" class="btn btn-huit-primary px-4 fw-bold" id="btnSubmit">
-                            <i class="fa-solid fa-check me-1"></i> Lưu và Phân lịch
+                        <a href="index.php?controller=schedule&action=index" class="btn-modern-outline">Hủy bỏ</a>
+                        <button type="submit" class="btn-modern-primary" id="btnSubmit">
+                            <i class="fa-solid fa-check"></i> Lưu và Phân lịch
                         </button>
                     </div>
                 </form>
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div class="small text-muted">
                         <i class="fa-solid fa-envelope me-1"></i>${t.email}
                     </div>
-                    <button type="button" class="btn btn-sm ${t.is_busy ? 'btn-outline-secondary disabled' : 'btn-huit-primary'} py-1 px-3"
+                    <button type="button" class="btn btn-sm ${t.is_busy ? 'btn-modern-outline disabled' : 'btn-modern-primary'} py-1 px-3"
                             onclick="selectTeacher(${t.teacher_id}, '${t.full_name.replace(/'/g, "\\'")}')"
                             ${t.is_busy ? 'disabled' : ''}>
                         ${t.is_busy ? 'Không khả dụng' : '<i class="fa-solid fa-check me-1"></i>Chọn GV này'}

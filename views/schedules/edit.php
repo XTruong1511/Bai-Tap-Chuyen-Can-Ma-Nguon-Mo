@@ -96,9 +96,9 @@ use App\Models\Schedule;
                     </div>
 
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="index.php?controller=schedule&action=index" class="btn btn-light px-3">Hủy</a>
-                        <button type="submit" class="btn btn-primary px-4 fw-bold">
-                            <i class="fa-solid fa-floppy-disk me-1"></i> Cập nhật Lịch
+                        <a href="index.php?controller=schedule&action=index" class="btn-modern-outline">Hủy</a>
+                        <button type="submit" class="btn-modern-primary">
+                            <i class="fa-solid fa-floppy-disk"></i> Cập nhật Lịch
                         </button>
                     </div>
                 </form>
